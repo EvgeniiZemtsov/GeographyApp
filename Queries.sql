@@ -14,24 +14,6 @@ JOIN seas
 ON country_sea.sea_id = seas.sea_id
 GROUP BY country_general.name;
 
-WITH c_p as (
-Select country_id,
-name,
-first_name,
-last_name,
-capital_id
-from country_general
-join current_heads_of_states
-on country_general.head_of_state_id=current_heads_of_states.head_of_state_id)
-select c_p.name, c_p.first_name, c_p.last_name, currency.name, cities.name
-from c_p
-join currency
-on c_p.currency_id = currency.currency_id
-join country_capital
-on c_p.coutry_id = country_capital.country_id
-join cities
-on country_capital.city_id = cities.city_id;
-
 WITH c_c AS (
     SELECT country_general.name AS country, 
            cities.name AS capital, 
