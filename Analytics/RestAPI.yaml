@@ -1,0 +1,1046 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: 'GeographicalApp API'
+  description: 'An API allows users to obtain an existing geographical information or post new'
+  contact:
+    name: Evgenii Zemtsov
+    email: sever-zema@mail.ru
+    url: http://geographicalapp.com
+    
+servers:
+  - url: http://dev.geoapp.com/v1
+    description: Dev Server
+  
+  - url: http://prod.geoapp.com/v1
+    description: Prod Server
+  
+paths:
+  /countries:
+    get:
+      description: Obtain information about countries from the database
+      parameters:
+        - name: bodyLimit
+          in: query
+          description: The amount of countries returned
+          schema:
+            type: integer
+            minimum: 10
+            maximum: 20
+            example: 15
+            
+        - name: pageLimit
+          in: query
+          description: The pages to return countries info
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            example: 2
+            
+      responses:
+        200:
+          description: Successfull pull of country info
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Countries'
+               
+            application/xml:
+              schema:
+               $ref: '#/components/schemas/Countries'
+    
+    post:
+      description: Adds new country to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Country'
+              
+          application/xml:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Country'
+                
+      responses:
+        200:
+          description: Successfully creates a new record
+          
+  /countries/{id}:
+    get:
+      description: Obtain information about a specific country
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the country
+          schema:
+            type: integer
+            example: 7
+      
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Country'
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Country'
+                
+  /cities:
+    get:
+      description: Obtain information about cities from the database
+      parameters:
+        - name: bodyLimit
+          in: query
+          description: The amount of cities returned
+          schema:
+            type: integer
+            minimum: 10
+            maximum: 20
+            example: 15
+            
+        - name: pageLimit
+          in: query
+          description: The pages to return cities info
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            example: 2
+            
+      responses:
+        200:
+          description: Successfull pull of city info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cities'
+                
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Cities'
+                
+    post:
+      description: Adds new city to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/City'
+              
+          application/xml:
+            schema:
+              type: object
+              $ref: '#/components/schemas/City'
+                
+      responses:
+        200:
+          description: Successfully creates a new record
+               
+  /city/{id}:
+    get:
+      description: Obtain information about a specific city
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the city
+          schema:
+            type: integer
+            example: 7
+      
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/City'
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/City'
+                
+  /headsofstates:
+    get:
+      description: Obtain information about head of states from the database
+      parameters:
+        - name: bodyLimit
+          in: query
+          description: The amount of heads of states returned
+          schema:
+            type: integer
+            minimum: 10
+            maximum: 20
+            example: 15
+            
+        - name: pageLimit
+          in: query
+          description: The pages to return heads of states info
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            example: 2
+            
+      responses:
+        200:
+          description: Successfull pull of head of state info
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/HeadsOfStates'
+               
+            application/xml:
+              schema:
+               $ref: '#/components/schemas/HeadsOfStates'
+               
+    post:
+      description: Adds new head of state to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/HeadOfState'
+              
+          application/xml:
+            schema:
+              type: object
+              $ref: '#/components/schemas/HeadOfState'
+                
+      responses:
+        200:
+          description: Successfully creates a new record
+          
+  /headsofstates/{id}:
+    get:
+      description: Obtain information about a specific head of state
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the head of state
+          schema:
+            type: integer
+            example: 7
+      
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/HeadOfState'
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/HeadOfState'
+                
+  /oceans:
+    get:
+      description: Obtain information about oceans from the database
+      parameters:
+        - name: bodyLimit
+          in: query
+          description: The amount of oceans returned
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 7
+            example: 2
+            
+        - name: pageLimit
+          in: query
+          description: The pages to return oceans info
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            example: 2
+      responses:
+        200:
+          description: Successfull pull of ocean info
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Oceans'
+               
+            application/xml:
+              schema:
+               $ref: '#/components/schemas/Oceans'
+               
+    post:
+      description: Adds new ocean to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Ocean'
+              
+          application/xml:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Ocean'
+                
+      responses:
+        200:
+          description: Successfully creates a new record           
+          
+  /ocean/{id}:
+    get:
+      description: Obtain information about a specific ocean
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the ocean
+          schema:
+            type: integer
+            example: 2
+      
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Ocean'
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Ocean'
+                
+  /seas:
+    get:
+      description: Obtain information about seas from the database
+      parameters:
+        - name: bodyLimit
+          in: query
+          description: The amount of seas returned
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            example: 15
+            
+        - name: pageLimit
+          in: query
+          description: The pages to return seas info
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            example: 2
+      responses:
+        200:
+          description: Successfull pull of sea info
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Seas'
+               
+            application/xml:
+              schema:
+               $ref: '#/components/schemas/Seas'
+               
+    post:
+      description: Adds new sea to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Sea'
+              
+          application/xml:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Sea'
+                
+      responses:
+        200:
+          description: Successfully creates a new record
+  /seas/{id}:
+    get:
+      description: Obtain information about a specific sea
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the sea
+          schema:
+            type: integer
+            example: 2
+      
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Sea'
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Sea'
+                
+  /mountains:
+    get:
+      description: Obtain information about mountains from the database
+      parameters:
+        - name: bodyLimit
+          in: query
+          description: The amount of mountains returned
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 7
+            example: 2
+            
+        - name: pageLimit
+          in: query
+          description: The pages to return mountains info
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            example: 2
+      responses:
+        200:
+          description: Successfull pull of mountain info
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Mountains'
+               
+            application/xml:
+              schema:
+               $ref: '#/components/schemas/Mountains'
+               
+    post:
+      description: Adds new mountain to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Mountain'
+              
+          application/xml:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Mountain'
+                
+      responses:
+        200:
+          description: Successfully creates a new record
+          
+  /mountain/{id}:
+    get:
+      description: Obtain information about a specific mountain
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the mountain
+          schema:
+            type: integer
+            example: 2
+      
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Mountain'
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Mountain'
+                
+  /continents:
+    get:
+      description: Obtain information about continents from the database
+      parameters:
+        - name: bodyLimit
+          in: query
+          description: The amount of continents returned
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 6
+            example: 2
+            
+        - name: pageLimit
+          in: query
+          description: The pages to return continents info
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            example: 2
+            
+      responses:
+        200:
+          description: Successfull pull of continent info
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Continents'
+               
+            application/xml:
+              schema:
+               $ref: '#/components/schemas/Continents'
+               
+    post:
+      description: Adds new continent to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Continent'
+              
+          application/xml:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Continent'
+                
+      responses:
+        200:
+          description: Successfully creates a new record
+          
+  /continent/{id}:
+    get:
+      description: Obtain information about a specific continent
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the continent
+          schema:
+            type: integer
+            example: 2
+      
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Continent'
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Continent'
+                
+  /sights:
+    get:
+      description: Obtain information about sights from the database
+      parameters:
+        - name: bodyLimit
+          in: query
+          description: The amount of sights returned
+          schema:
+            type: integer
+            minimum: 10
+            maximum: 20
+            example: 15
+            
+        - name: pageLimit
+          in: query
+          description: The pages to return sights info
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            example: 2
+            
+      responses:
+        200:
+          description: Successfull pull of sight info
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Sights'
+               
+            application/xml:
+              schema:
+               $ref: '#/components/schemas/Sights'
+               
+    post:
+      description: Adds new sight to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Sight'
+              
+          application/xml:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Sight'
+                
+      responses:
+        200:
+          description: Successfully creates a new record
+          
+  /sights/{id}:
+    get:
+      description: Obtain information about a specific sight
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the sight
+          schema:
+            type: integer
+            example: 2
+      
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Sight'
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Sight'
+                
+  /languages:
+    get:
+      description: Obtain information about language from the database
+      parameters:
+        - name: bodyLimit
+          in: query
+          description: The amount of language returned
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            example: 15
+            
+        - name: pageLimit
+          in: query
+          description: The pages to return continents info
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            example: 2
+            
+      responses:
+        200:
+          description: Successfull pull of language info
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Languages'
+               
+            application/xml:
+              schema:
+               $ref: '#/components/schemas/Languages'
+               
+    post:
+      description: Adds new language to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Language'
+              
+          application/xml:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Language'
+                
+      responses:
+        200:
+          description: Successfully creates a new record
+          
+  /languages/{id}:
+    get:
+      description: Obtain information about a specific language
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the language
+          schema:
+            type: integer
+            example: 2
+      
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Language'
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Language'
+                
+  /currencies:
+    get:
+      description: Obtain information about currencies from the database
+      parameters:
+        - name: bodyLimit
+          in: query
+          description: The amount of currencies returned
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            example: 2
+            
+        - name: pageLimit
+          in: query
+          description: The pages to return currencies info
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            example: 2
+            
+      responses:
+        200:
+          description: Successfull pull of currencies info
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Currencies'
+               
+            application/xml:
+              schema:
+               $ref: '#/components/schemas/Currencies'
+               
+    post:
+      description: Adds new continent to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Continent'
+              
+          application/xml:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Continent'
+                
+      responses:
+        200:
+          description: Successfully creates a new record
+          
+  /currencies/{id}:
+    get:
+      description: Obtain information about a specific currency
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the currency
+          schema:
+            type: integer
+            example: 2
+      
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Currency'
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Currency'
+      
+components:
+  schemas:
+    Countries:
+      description: Array of countries
+      type: array
+      items :
+       $ref: '#/components/schemas/Country'
+       
+    Country:
+      description: Model containing country info
+      properties:
+        id:
+          type: integer
+          example: 4
+                      
+        country name: 
+          type: string
+          example: Canada
+                      
+        area:
+          type: integer
+          example: 8600000
+                      
+        population:
+          type: integer
+          example: 35000000
+                      
+        language: 
+          type: string
+          example: English
+                      
+        continent: 
+          type: string
+          example: North America
+                      
+        capital: 
+          type: string
+          example: Ottawa
+                      
+        currency: 
+          type: string
+          example: CAD
+          
+    Cities:
+      description: Array of cities
+      type: array
+      items :
+       $ref: '#/components/schemas/City'
+          
+    City:
+      description: Model containing city info
+      properties:
+        id:
+          type: integer
+          example: 4
+                      
+        city name: 
+          type: string
+          example: Dallas
+          
+        country: 
+          type: string
+          example: Canada
+                      
+        area:
+          type: integer
+          example: 860000
+                      
+        population:
+          type: integer
+          example: 10000000
+          
+    HeadsOfStates:
+      description: Array of heads of states
+      type: array
+      items :
+       $ref: '#/components/schemas/HeadOfState'
+          
+    HeadOfState:
+      description: Model containing head of state info
+      properties:
+        id:
+          type: integer
+          example: 4
+                      
+        head of state first name: 
+          type: string
+          example: Emanuel
+          
+        head of state last name: 
+          type: string
+          example: Macron
+          
+        title: 
+          type: string
+          example: President
+                      
+        date of birth:
+          type: string
+          example: 11/23/1975
+          
+    Oceans:
+      description: Array of oceans
+      type: array
+      items :
+       $ref: '#/components/schemas/Ocean'
+          
+    Ocean:
+      description: Model containing ocean info
+      properties:
+        id:
+          type: integer
+          example: 4
+                      
+        ocean name: 
+          type: string
+          example: Atlantic
+          
+        area: 
+          type: integer
+          example: 160000000
+          
+        maxdepth:
+          type: integer
+          example: 9500
+          
+    Seas:
+      description: Array of seas
+      type: array
+      items :
+       $ref: '#/components/schemas/Sea'
+          
+    Sea:
+      description: Model containing sea info
+      properties:
+        id:
+          type: integer
+          example: 4
+                      
+        sea name: 
+          type: string
+          example: Mediterranean 
+          
+        area: 
+          type: integer
+          example: 2500000
+          
+        maxdepth:
+          type: integer
+          example: 5100
+          
+    Mountains:
+      description: Array of seas
+      type: array
+      items :
+       $ref: '#/components/schemas/Mountain'
+          
+    Mountain:
+      description: Model containing mountain info
+      properties:
+        id:
+          type: integer
+          example: 4
+                      
+        mountain name: 
+          type: string
+          example: Everest 
+          
+        height:
+          type: integer
+          example: 8848
+          
+    Continents:
+      description: Array of continents
+      type: array
+      items :
+       $ref: '#/components/schemas/Continent'
+          
+    Continent:
+      description: Model containing continent info
+      properties:
+        id:
+          type: integer
+          example: 4
+                      
+        continent name: 
+          type: string
+          example: South America 
+          
+        height:
+          type: integer
+          example: 17 840 000
+          
+    Sights:
+      description: Array of sights
+      type: array
+      items :
+       $ref: '#/components/schemas/Sight'
+          
+    Sight:
+      description: Model containing sight info
+      properties:
+        id:
+          type: integer
+          example: 4
+                      
+        sight name: 
+          type: string
+          example: Colosseum
+          
+    Languages:
+      description: Array of languages
+      type: array
+      items :
+       $ref: '#/components/schemas/Language'
+          
+    Language:
+      description: Model containing language info
+      properties:
+        id:
+          type: integer
+          example: 4
+          
+        number of native speakers:
+          type: integer
+          example: 500000000
+                      
+        language name: 
+          type: string
+          example: Spanish
+          
+    Currencies:
+      description: Array of languages
+      type: array
+      items :
+       $ref: '#/components/schemas/Currency'
+          
+    Currency:
+      description: Model containing currency info
+      properties:
+        id:
+          type: integer
+          example: 4
+
+        currency name: 
+          type: string
+          example: American dollar
+          
+        currency code: 
+          type: string
+          example: USD
+      
