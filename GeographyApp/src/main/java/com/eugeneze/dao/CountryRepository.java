@@ -27,17 +27,21 @@ public class CountryRepository implements Repository {
             Country country = null;
 
             if (resultSet.next()) {
-                country = new Country(resultSet.getInt("country_id"), resultSet.getString("name"));
-                country.addGeographicalInformation(resultSet.getInt("population"), resultSet.getInt("area"),
-                        new Continent(resultSet.getInt("continent_id"),
+                country = new Country.Builder(resultSet.getInt("country_id"), resultSet.getString("name"))
+                        .setPopulation(resultSet.getInt("population"))
+                        .setArea(resultSet.getInt("area"))
+                        .setContinent(new Continent(resultSet.getInt("continent_id"),
                                 resultSet.getString("continent"),
-                                resultSet.getInt("continent_area")));
+                                resultSet.getInt("continent_area")))
+                        .setCurrency(new Currency(resultSet.getInt("currency_id"),
+                                resultSet.getString("currency"),
+                                resultSet.getString("currency_code")))
+                        .setHeadOfState(new HeadOfState.Builder(resultSet.getInt("head_of_state_id"),
+                                resultSet.getString("first_name"),
+                                resultSet.getString("last_name")).build())
+                        .setLanguage(new Language.Builder(resultSet.getInt("language_id"), resultSet.getString("language")).build())
+                        .setCapital(new City.Builder(resultSet.getInt("capital_id"), resultSet.getString("capital")).build()).build();
 
-                country.addPoliticalInformation(
-                        new Currency(resultSet.getInt("currency_id"), resultSet.getString("currency"), resultSet.getString("currency_code")),
-                        new HeadOfState(resultSet.getInt("head_of_state_id"), resultSet.getString("first_name"), resultSet.getString("last_name")),
-                        new Language(resultSet.getInt("language_id"), resultSet.getString("language")),
-                        new City(resultSet.getInt("capital_id"), resultSet.getString("capital")));
             }
             if(countrySpecification.isSatisfiedBy(country)) {
                 countries.add(country);
@@ -59,7 +63,7 @@ public class CountryRepository implements Repository {
 
             preparedStatement.executeUpdate();
 
-        } catch (SQLException | IllegalAccessException | NoSuchFieldException throwables) {
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
@@ -75,7 +79,7 @@ public class CountryRepository implements Repository {
 
             preparedStatement.executeUpdate();
 
-        } catch (SQLException | NoSuchFieldException | IllegalAccessException throwables) {
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
@@ -97,242 +101,104 @@ public class CountryRepository implements Repository {
     }
 
     private void setWildCardsToUpdate(Country country,
-                                      PreparedStatement preparedStatement) throws NoSuchFieldException, IllegalAccessException, SQLException {
-//          update field "name" in database
-        Field nameField = country.getClass().getDeclaredField("name");
-        nameField.setAccessible(true);
-        String name = (String) nameField.get(country);
+                                      PreparedStatement preparedStatement) throws SQLException {
+        Object[] dataCountry = country.getObjects();
+        Object[] dataCurrency = ((Currency)dataCountry[4]).getObjects();
+        Object[] dataHeadOfState = ((HeadOfState)dataCountry[5]).getObjects();
+        Object[] dataLanguage = ((Language)dataCountry[6]).getObjects();
+        Object[] dataContinent = ((Continent)dataCountry[7]).getObjects();
+        Object[] dataCapital = ((City)dataCountry[8]).getObjects();
 
-        preparedStatement.setString(1, name);
+//        UPDATING country data and IDs
+        preparedStatement.setString(1, (String)dataCountry[1]);
+        preparedStatement.setInt(2, (int)dataCountry[2]);
+        preparedStatement.setInt(3, (int)dataCountry[3]);
+        preparedStatement.setInt(4, (int)dataCurrency[0]);
+        preparedStatement.setInt(14, (int)dataCurrency[0]);
+        preparedStatement.setInt(5, (int)dataHeadOfState[0]);
+        preparedStatement.setInt(9, (int)dataHeadOfState[0]);
+        preparedStatement.setInt(6, (int)dataLanguage[0]);
+        preparedStatement.setInt(17, (int)dataLanguage[0]);
+        preparedStatement.setInt(7, (int)dataContinent[0]);
+        preparedStatement.setInt(20, (int)dataContinent[0]);
+        preparedStatement.setInt(8, (int)dataCountry[0]);
 
-//          update field "population" in database
-        Field populationField = country.getClass().getDeclaredField("population");
-        populationField.setAccessible(true);
-        int population = populationField.getInt(country);
+//        UPDATING headOfState data
+        preparedStatement.setString(10, (String)dataHeadOfState[1]);
+        preparedStatement.setString(11, (String)dataHeadOfState[2]);
+        preparedStatement.setDate(12, (Date)dataHeadOfState[3]);
+        preparedStatement.setString(13, (String)dataHeadOfState[4]);
 
-        preparedStatement.setInt(2, population);
+//        UPDATING currency data
+        preparedStatement.setString(15, (String)dataCurrency[1]);
+        preparedStatement.setString(16, (String)dataCurrency[2]);
 
-//          update field "area" in database
-        Field areaField = country.getClass().getDeclaredField("area");
-        areaField.setAccessible(true);
-        int area = areaField.getInt(country);
+//        UPDATING language data
+        preparedStatement.setString(18, (String)dataLanguage[1]);
+        preparedStatement.setInt(19, (int)dataLanguage[2]);
 
-        preparedStatement.setInt(3, area);
+//        UPDATING continent data
+        preparedStatement.setString(21, (String)dataContinent[1]);
+        preparedStatement.setInt(22, (int)dataContinent[2]);
 
-//          update field "currency_id" in database
-        Field currencyField = country.getClass().getDeclaredField("currency");
-        currencyField.setAccessible(true);
-        Currency currency = (Currency) currencyField.get(country);
+//        UPDATING city data
+        preparedStatement.setInt(23, (int)dataCapital[0]);
+        preparedStatement.setString(24, (String)dataCapital[1]);
+        preparedStatement.setInt(25, (int)dataCountry[0]);
+        preparedStatement.setInt(26, (int)dataCapital[3]);
+        preparedStatement.setInt(27, (int)dataCapital[4]);
 
-        Field currencyIdField = currency.getClass().getDeclaredField("id");
-        currencyIdField.setAccessible(true);
-        int currencyId = currencyIdField.getInt(currency);
-
-        preparedStatement.setInt(4, currencyId);
-        preparedStatement.setInt(14, currencyId);
-
-//          update field "head_of_state_id" in database
-        Field headOfStateField = country.getClass().getDeclaredField("headOfState");
-        headOfStateField.setAccessible(true);
-        HeadOfState headOfState = (HeadOfState) headOfStateField.get(country);
-
-        Field headOfStateIdField = headOfState.getClass().getDeclaredField("id");
-        headOfStateIdField.setAccessible(true);
-        int headOfStateId = currencyIdField.getInt(currency);
-
-        preparedStatement.setInt(5, headOfStateId);
-        preparedStatement.setInt(9, headOfStateId);
-
-//          update field "language_id" in database
-        Field languageField = country.getClass().getDeclaredField("language");
-        languageField.setAccessible(true);
-        Language language = (Language) languageField.get(country);
-
-        Field languageIdField = language.getClass().getDeclaredField("id");
-        languageIdField.setAccessible(true);
-        int languageId = languageIdField.getInt(currency);
-
-        preparedStatement.setInt(6, languageId);
-        preparedStatement.setInt(17, languageId);
-
-//          update field "continent_id" in database
-        Field continentField = country.getClass().getDeclaredField("continent");
-        continentField.setAccessible(true);
-        Continent continent = (Continent) continentField.get(country);
-
-        Field continentIdField = continent.getClass().getDeclaredField("id");
-        continentIdField.setAccessible(true);
-        int continentId = continentIdField.getInt(currency);
-
-        preparedStatement.setInt(7, continentId);
-        preparedStatement.setInt(20, continentId);
-
-//          update field "id" in database
-        Field countryIdField = country.getClass().getDeclaredField("id");
-        countryIdField.setAccessible(true);
-        int id = countryIdField.getInt(country);
-
-        preparedStatement.setInt(8, id);
-
-//        updating current_head_of_state record
-        Field firstNameField = headOfState.getClass().getDeclaredField("firstName");
-        Field lastNameField = headOfState.getClass().getDeclaredField("lastName");
-        Field dateOfBirthField = headOfState.getClass().getDeclaredField("dateOfBirth");
-        Field titleField = headOfState.getClass().getDeclaredField("title");
-
-        firstNameField.setAccessible(true);
-        lastNameField.setAccessible(true);
-        dateOfBirthField.setAccessible(true);
-        titleField.setAccessible(true);
-
-        String firstName = (String)firstNameField.get(headOfState);
-        String lastName = (String)lastNameField.get(headOfState);
-        Date dateOfBirth = (Date)dateOfBirthField.get(headOfState);
-        String title = (String)titleField.get(headOfState);
-
-        preparedStatement.setString(10, firstName);
-        preparedStatement.setString(11, lastName);
-        preparedStatement.setDate(12, dateOfBirth);
-        preparedStatement.setString(13, title);
-
-//        updating currency record
-        Field currencyNameField = currency.getClass().getDeclaredField("name");
-        Field currencyCodeField = currency.getClass().getDeclaredField("code");
-
-        currencyNameField.setAccessible(true);
-        currencyCodeField.setAccessible(true);
-
-        String currencyName = (String)currencyNameField.get(currency);
-        String currencyCode = (String)currencyCodeField.get(currency);
-
-        preparedStatement.setString(15, currencyName);
-        preparedStatement.setString(16, currencyCode);
-
-//        updating language record
-        Field languageNameField = language.getClass().getDeclaredField("name");
-        Field numberOfNativeSpeakersField = language.getClass().getDeclaredField("numberOfNativeSpeakers");
-
-        languageNameField.setAccessible(true);
-        numberOfNativeSpeakersField.setAccessible(true);
-
-        String languageName = (String)languageNameField.get(language);
-        int numberOfNativeSpeakers = numberOfNativeSpeakersField.getInt(language);
-
-        preparedStatement.setString(18, languageName);
-        preparedStatement.setInt(19, numberOfNativeSpeakers);
-
-//        updating continent record
-        Field continentNameField = continent.getClass().getDeclaredField("name");
-        Field continentAreaField = continent.getClass().getDeclaredField("area");
-
-        continentNameField.setAccessible(true);
-        continentAreaField.setAccessible(true);
-
-        String continentName = (String)continentNameField.get(continent);
-        int continentArea = continentAreaField.getInt(continent);
-
-        preparedStatement.setString(21, continentName);
-        preparedStatement.setInt(22, continentArea);
     }
 
     private void setWildCardsToCreate(Country country,
-                                      PreparedStatement preparedStatement) throws NoSuchFieldException, IllegalAccessException, SQLException {
+                                      PreparedStatement preparedStatement) throws SQLException {
 
-//          adding field "id" to database
-        Field countryIdField = country.getClass().getDeclaredField("id");
-        countryIdField.setAccessible(true);
-        int id = countryIdField.getInt(country);
+        Object[] dataCountry = country.getObjects();
+        Object[] dataCurrency = ((Currency)dataCountry[4]).getObjects();
+        Object[] dataHeadOfState = ((HeadOfState)dataCountry[5]).getObjects();
+        Object[] dataLanguage = ((Language)dataCountry[6]).getObjects();
+        Object[] dataContinent = ((Continent)dataCountry[7]).getObjects();
+        Object[] dataCapital = ((City)dataCountry[8]).getObjects();
 
-        preparedStatement.setInt(1, id);
+//        INSERTING country data and IDs
+        preparedStatement.setInt(1, (int)dataCountry[0]);
+        preparedStatement.setString(2, (String)dataCountry[1]);
+        preparedStatement.setInt(3, (int)dataCountry[2]);
+        preparedStatement.setInt(4, (int)dataCountry[3]);
+        preparedStatement.setInt(5, (int)dataCurrency[0]);
+        preparedStatement.setInt(20, (int)dataCurrency[0]);
+        preparedStatement.setInt(6, (int)dataHeadOfState[0]);
+        preparedStatement.setInt(9, (int)dataHeadOfState[0]);
+        preparedStatement.setInt(7, (int)dataLanguage[0]);
+        preparedStatement.setInt(14, (int)dataLanguage[0]);
+        preparedStatement.setInt(8, (int)dataContinent[0]);
+        preparedStatement.setInt(17, (int)dataContinent[0]);
 
-//          adding field "name" to database
-        Field nameField = country.getClass().getDeclaredField("name");
-        nameField.setAccessible(true);
-        String name = (String) nameField.get(country);
+//        INSERTING headOfState data
+        preparedStatement.setString(10, (String)dataHeadOfState[1]);
+        preparedStatement.setString(11, (String)dataHeadOfState[2]);
+        preparedStatement.setDate(12, (Date)dataHeadOfState[3]);
+        preparedStatement.setString(13, (String)dataHeadOfState[4]);
 
-        preparedStatement.setString(2, name);
+//        INSERTING language data
+        preparedStatement.setString(15, (String)dataLanguage[1]);
+        preparedStatement.setInt(16, (int)dataLanguage[2]);
 
-//          adding field "population" to database
-        Field populationField = country.getClass().getDeclaredField("population");
-        populationField.setAccessible(true);
-        int population = populationField.getInt(country);
+//        INSERTING continent data
+        preparedStatement.setString(18, (String)dataContinent[1]);
+        preparedStatement.setInt(19, (int)dataContinent[2]);
 
-        preparedStatement.setInt(3, population);
+//        INSERTING currency data
+        preparedStatement.setString(21, (String)dataCurrency[1]);
+        preparedStatement.setString(22, (String)dataCurrency[2]);
 
-//          adding field "area" to database
-        Field areaField = country.getClass().getDeclaredField("area");
-        areaField.setAccessible(true);
-        int area = areaField.getInt(country);
+//        INSERTING city data
+        preparedStatement.setInt(23, (int)dataCapital[0]);
+        preparedStatement.setString(24, (String)dataCapital[1]);
+        preparedStatement.setInt(25, (int)dataCountry[0]);
+        preparedStatement.setInt(26, (int)dataCapital[3]);
+        preparedStatement.setInt(27, (int)dataCapital[4]);
 
-        preparedStatement.setInt(4, area);
-
-//          adding field "currency_id" to database
-        Field currencyField = country.getClass().getDeclaredField("currency");
-        currencyField.setAccessible(true);
-        Currency currency = (Currency) currencyField.get(country);
-
-        Field currencyIdField = currency.getClass().getDeclaredField("id");
-        currencyIdField.setAccessible(true);
-        int currencyId = currencyIdField.getInt(currency);
-
-        preparedStatement.setInt(5, currencyId);
-
-//          adding field "head_of_state_id" to database
-        Field headOfStateField = country.getClass().getDeclaredField("headOfState");
-        headOfStateField.setAccessible(true);
-        HeadOfState headOfState = (HeadOfState) headOfStateField.get(country);
-
-        Field headOfStateIdField = headOfState.getClass().getDeclaredField("id");
-        headOfStateIdField.setAccessible(true);
-        int headOfStateId = headOfStateIdField.getInt(currency);
-
-        preparedStatement.setInt(6, headOfStateId);
-
-
-//          adding field "language_id" to database
-        Field languageField = country.getClass().getDeclaredField("language");
-        languageField.setAccessible(true);
-        Language language = (Language) languageField.get(country);
-
-        Field languageIdField = language.getClass().getDeclaredField("id");
-        languageIdField.setAccessible(true);
-        int languageId = languageIdField.getInt(currency);
-
-        preparedStatement.setInt(7, languageId);
-
-//          adding field "continent_id" to database
-        Field continentField = country.getClass().getDeclaredField("continent");
-        continentField.setAccessible(true);
-        Continent continent = (Continent) continentField.get(country);
-
-        Field continentIdField = continent.getClass().getDeclaredField("id");
-        continentIdField.setAccessible(true);
-        int continentId = continentIdField.getInt(currency);
-
-        preparedStatement.setInt(8, continentId);
-
-//        adding head_of_state to database
-        preparedStatement.setInt(9, headOfStateId);
-
-        Field firstNameField = headOfState.getClass().getDeclaredField("firstName");
-        firstNameField.setAccessible(true);
-        String firstName = (String)firstNameField.get(headOfState);
-        preparedStatement.setString(10, firstName);
-
-        Field lastNameField = headOfState.getClass().getDeclaredField("lastName");
-        lastNameField.setAccessible(true);
-        String lastName = (String)lastNameField.get(headOfState);
-        preparedStatement.setString(11, lastName);
-
-        Field dateOfBirthField = headOfState.getClass().getDeclaredField("dateOfBirth");
-        dateOfBirthField.setAccessible(true);
-        Date dateOfBirth = (Date)dateOfBirthField.get(headOfState);
-        preparedStatement.setDate(12, dateOfBirth);
-
-        Field titleField = headOfState.getClass().getDeclaredField("title");
-        titleField.setAccessible(true);
-        String title = (String)titleField.get(headOfState);
-        preparedStatement.setString(13, title);
     }
 
     enum SQLStatements {
@@ -377,7 +243,19 @@ public class CountryRepository implements Repository {
                 "VALUES ((?), (?), (?), (?), (?), (?), (?), (?));" +
                 "INSERT into current_heads_of_states" +
                 "VALUES ((?), (?), (?), (?), (?))" +
-                "on conflict do nothing"),
+                "on conflict do nothing;" +
+                "INSERT INTO Languages" +
+                "VALUES ((?), (?), (?))" +
+                "on conflict do nothing;" +
+                "INSERT INTO Continents" +
+                "VALUES ((?), (?), (?))" +
+                "on conflict do nothing;" +
+                "INSERT INTO Currency" +
+                "VALUES ((?), (?), (?))" +
+                "on conflict do nothing;" +
+                "INSERT INTO Cities" +
+                "VALUES ((?), (?), (?), (?), (?))" +
+                "on conflict do nothing;"),
         UPDATE("UPDATE Country_general" +
                 "SET name = (?), " +
                 "population = (?), area = (?), currency_id = (?), " +
@@ -386,7 +264,7 @@ public class CountryRepository implements Repository {
                 "WHERE country_id = (?);" +
                 "INSERT INTO Current_heads_of_states values ((?), (?), (?), (?), (?)) " +
                 "on conflict (head_of_state_id) do update SET date_of_birth = Excluded.date_of_birth, " +
-                "first_name = Excluded.first_name, last_name = Excluded.last_name, title = Excluded. title;" +
+                "first_name = Excluded.first_name, last_name = Excluded.last_name, title = Excluded.title;" +
                 "INSERT INTO currency values ((?), (?), (?)) " +
                 "on conflict (currency_id) do update SET name = Excluded.name, " +
                 "currency_code = Excluded.currency_code;" +
@@ -395,7 +273,10 @@ public class CountryRepository implements Repository {
                 "number_of_native_speakers = Excluded.number_of_native_speakers;" +
                 "INSERT INTO continents values ((?), (?), (?)) " +
                 "on conflict (continent_id) do update SET name = Excluded.name, " +
-                "area = Excluded.area"),
+                "area = Excluded.area;" +
+                "INSERT INTO Cities values ((?), (?), (?), (?), (?)) " +
+                "on conflict (city_id) do update SET name = Excluded.name, " +
+                "country_id = Excluded.country_id, area = Excluded.area, population = Excluded.population;"),
         DELETE("DELETE FROM Country_general" +
                 "WHERE id = (?)");
 

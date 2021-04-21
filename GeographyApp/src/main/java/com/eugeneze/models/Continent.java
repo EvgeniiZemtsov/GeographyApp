@@ -10,4 +10,13 @@ public class Continent extends GeographicalObject {
         this.area = area;
     }
 
+    public Object[] getObjects() {
+        return new Object[] {
+                id,
+                name,
+                area,
+                countries
+        };
+    }
+
 }

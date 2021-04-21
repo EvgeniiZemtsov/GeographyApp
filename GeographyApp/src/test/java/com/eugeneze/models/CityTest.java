@@ -12,22 +12,11 @@ import static org.mockito.Mockito.when;
 
 class CityTest {
 
-    City city  = new City(1, "Rome");
-
-    @Test
-    void addExtraInformationAddsInformation() {
-        Country country = mock(Country.class);
-
-        city.addExtraInformation(700000, 5000000, country);
-
-        assertThat(city).hasFieldOrPropertyWithValue("area", 700000)
-                .hasFieldOrPropertyWithValue("population", 5000000)
-                .hasFieldOrPropertyWithValue("country", country);
-    }
 
     @Test
     void renameRenamesTheCity() throws Exception {
         Voting voting = mock(Voting.class);
+        City city = new City.Builder(1, "Rome").build();
         city.setVoting(voting);
 
         when(voting.vote(city)).thenReturn(90);
@@ -39,6 +28,7 @@ class CityTest {
     @Test
     void renameThrowsException() throws Exception {
         Voting voting = mock(Voting.class);
+        City city = new City.Builder(1, "Rome").build();
         city.setVoting(voting);
 
         when(voting.vote(city)).thenReturn(10);
@@ -47,15 +37,13 @@ class CityTest {
 
     }
 
-
-
     @Test
     void getIndependenceMakesCountryEqualsNull() throws Exception {
         Voting voting = mock(Voting.class);
         Country country = mock(Country.class);
+        City city = new City.Builder(1, "Rome").setPopulation(5000000).setArea(700000).setCountry(country).build();
 
         country.addCity(city);
-        city.addExtraInformation(700000, 5000000, country);
         city.setVoting(voting);
         when(voting.vote(city)).thenReturn(90);
         city.getIndependence();
@@ -67,21 +55,21 @@ class CityTest {
     void getIndependenceThrowsException() throws Exception {
         Voting voting = mock(Voting.class);
         Country country = mock(Country.class);
+        City city = new City.Builder(1, "Rome").setPopulation(5000000).setArea(700000).setCountry(country).build();
 
         country.addCity(city);
-        city.addExtraInformation(700000, 5000000, country);
+
         city.setVoting(voting);
         when(voting.vote(city)).thenReturn(10);
 
-        Assertions.assertThrows(PopulationDidntSupportException.class, () -> city.getIndependence());
+        Assertions.assertThrows(PopulationDidntSupportException.class, city::getIndependence);
 
     }
-
-
 
     @Test
     void addSightAddsToTheList() {
         Sight sight = mock(Sight.class);
+        City city = new City.Builder(1, "Rome").setPopulation(5000000).setArea(700000).build();
 
         city.addSight(sight);
 
@@ -91,6 +79,7 @@ class CityTest {
     @Test
     void removeSightRemovesFromTheList() {
         Sight sight = mock(Sight.class);
+        City city = new City.Builder(1, "Rome").setPopulation(5000000).setArea(700000).build();
 
         city.addSight(sight);
         city.removeSight(sight);
@@ -100,7 +89,7 @@ class CityTest {
 
     @Test
     void expand() {
-        city.addExtraInformation(10000, 5000000, null);
+        City city = new City.Builder(1, "Rome").setPopulation(5000000).setArea(10000).build();
 
         city.expand(5000);
 

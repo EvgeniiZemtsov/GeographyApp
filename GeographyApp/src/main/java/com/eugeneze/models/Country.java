@@ -56,28 +56,23 @@ public class Country {
      */
     private final List<Ocean> oceans = new ArrayList<>();
 
-    public Country(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+//    public Country(int id, String name) {
+//        this.id = id;
+//        this.name = name;
+//    }
 
-    /**
-     * Метод добавляет фактическую информацию о стране
-     */
-    public void addGeographicalInformation(int population, int area, Continent continent) {
-        this.population = population;
-        this.area = area;
-        this.continent = continent;
-    }
+    private Country(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.population = builder.population;
+        this.area = builder.area;
+        this.currency = builder.currency;
+        this.headOfState = builder.headOfState;
+        this.language = builder.language;
+        this.continent = builder.continent;
+        this.capital = builder.capital;
+        this.voting = builder.voting;
 
-    /**
-     * Метод добавляет политическую информацию о стране
-     */
-    public void addPoliticalInformation(Currency currency, HeadOfState headOfState, Language language, City capital) {
-        this.currency = currency;
-        this.headOfState = headOfState;
-        this.language = language;
-        this.capital = capital;
     }
 
     /**
@@ -210,4 +205,85 @@ public class Country {
         result = 31 * result + area;
         return result;
     }
+
+    public Object[] getObjects() {
+        return new Object[] {
+                id,
+                name,
+                population,
+                area,
+                currency,
+                headOfState,
+                language,
+                continent,
+                capital,
+                cities,
+                mountains,
+                oceans,
+                seas
+        };
+    }
+
+    public static final class Builder {
+        private int id;
+        private String name;
+        private int population;
+        private int area;
+        private Currency currency;
+        private HeadOfState headOfState;
+        private Language language;
+        private Continent continent;
+        private City capital;
+        private Voting voting;
+
+        public Builder(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public Builder setPopulation(int population) {
+            this.population = population;
+            return this;
+        }
+
+        public Builder setArea(int area) {
+            this.area = area;
+            return this;
+        }
+
+        public Builder setCurrency(Currency currency) {
+            this.currency = currency;
+            return this;
+        }
+
+        public Builder setHeadOfState(HeadOfState headOfState) {
+            this.headOfState = headOfState;
+            return this;
+        }
+
+        public Builder setLanguage(Language language) {
+            this.language = language;
+            return this;
+        }
+
+        public Builder setContinent(Continent continent) {
+            this.continent = continent;
+            return this;
+        }
+
+        public Builder setCapital(City capital) {
+            this.capital = capital;
+            return this;
+        }
+
+        public Builder setVoting(Voting voting) {
+            this.voting = voting;
+            return this;
+        }
+
+        public Country build() {
+            return new Country(this);
+        }
+    }
+
 }

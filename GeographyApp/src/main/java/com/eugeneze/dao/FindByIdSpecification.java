@@ -30,6 +30,6 @@ public class FindByIdSpecification extends AbstractSpecification<Country> {
 
     @Override
     public String toSqlClause() {
-        return String.format(" id = %d ", id);
+        return String.format("id = %d ", id);
     }
 }

@@ -21,4 +21,13 @@ public class Mountain extends GeographicalObject {
             this.height = height;
     }
 
+    public Object[] getObjects() {
+        return new Object[] {
+                id,
+                name,
+                height,
+                countries
+        };
+    }
+
 }
