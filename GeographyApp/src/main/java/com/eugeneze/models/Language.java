@@ -74,4 +74,22 @@ public class Language {
             return new Language(this);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Language)) return false;
+
+        Language language = (Language) o;
+
+        if (numberOfNativeSpeakers != language.numberOfNativeSpeakers) return false;
+        return name.equals(language.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + numberOfNativeSpeakers;
+        return result;
+    }
 }
