@@ -22,19 +22,14 @@ public class HeadOfState {
      */
     private Country workPlace;
 
-    public HeadOfState(int id, String firstName, String lastName) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
+    private HeadOfState(Builder builder) {
+        this.id = builder.id;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.dateOfBirth = builder.dateOfBirth;
+        this.title = builder.title;
+        this.workPlace = builder.workPlace;
 
-    /**
-     * Медод добавляет информацию о главе государства
-     */
-    public void addExtraInformation(LocalDate dateOfBirth, Country country, String title) {
-        this.dateOfBirth = dateOfBirth;
-        workPlace = country;
-        this.title = title;
     }
 
     /**
@@ -74,5 +69,51 @@ public class HeadOfState {
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (workPlace != null ? workPlace.hashCode() : 0);
         return result;
+    }
+
+    public Object[] getObjects() {
+        return new Object[] {
+                id,
+                firstName,
+                lastName,
+                dateOfBirth,
+                title,
+                workPlace
+        };
+    }
+
+    public static final class Builder {
+        private int id;
+        private String firstName;
+        private String lastName;
+        private LocalDate dateOfBirth;
+        private String title;
+        private Country workPlace;
+
+        public Builder(int id, String firstName, String lastName) {
+            this.id = id;
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+
+        public Builder setDateOfBirth(LocalDate dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+            return this;
+        }
+
+        public Builder setTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder setWorkPlace(Country workPlace) {
+            this.workPlace = workPlace;
+            return this;
+        }
+
+        public HeadOfState build() {
+            return new HeadOfState(this);
+        }
+
     }
 }

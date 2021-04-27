@@ -9,11 +9,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 class LanguageTest {
-    Language language = new Language(1, "English");
 
     @Test
     void addCountry() {
         Country country = mock(Country.class);
+        Language language = new Language.Builder(1, "English").build();
 
         language.addCountry(country);
 
@@ -23,6 +23,7 @@ class LanguageTest {
     @Test
     void removeCountry() {
         Country country = mock(Country.class);
+        Language language = new Language.Builder(1, "English").build();
 
         language.addCountry(country);
         language.removeCountry(country);

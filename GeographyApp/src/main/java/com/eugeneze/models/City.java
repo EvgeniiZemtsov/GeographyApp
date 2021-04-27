@@ -23,18 +23,13 @@ public class City {
      */
     private Voting voting;
 
-    public City(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    private City(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.country = builder.country;
+        this.area = builder.area;
+        this.population = builder.population;
 
-    /**
-     * Метод добавляет дополнительную информацию о городе
-     */
-    public void addExtraInformation(int area, int population, Country country) {
-        this.area = area;
-        this.population = population;
-        this.country = country;
     }
 
     /**
@@ -113,6 +108,49 @@ public class City {
         result = 31 * result + area;
         result = 31 * result + population;
         return result;
+    }
+
+    public Object[] getObjects() {
+        return new Object[] {
+                id,
+                name,
+                country,
+                area,
+                population,
+                sights
+        };
+    }
+
+    public static final class Builder {
+        private int id;
+        private String name;
+        private Country country;
+        private int area;
+        private int population;
+
+        public Builder(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public Builder setCountry(Country country) {
+            this.country = country;
+            return this;
+        }
+
+        public Builder setArea(int area) {
+            this.area = area;
+            return this;
+        }
+
+        public Builder setPopulation(int population) {
+            this.population = population;
+            return this;
+        }
+
+        public City build() {
+            return new City(this);
+        }
     }
 
 }

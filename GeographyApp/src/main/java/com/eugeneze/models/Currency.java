@@ -40,6 +40,14 @@ public class Currency {
         countries.remove(country);
     }
 
+    public Object[] getObjects() {
+        return new Object[] {
+                id,
+                name,
+                code,
+                countries
+        };
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

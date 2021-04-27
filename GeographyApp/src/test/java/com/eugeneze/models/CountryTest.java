@@ -15,42 +15,14 @@ import static org.mockito.Mockito.*;
 
 class CountryTest {
 
-    Country country = new Country(1, "Australia");
-
-    @Test
-    public void addGeographicalInformationAddsInformation() {
-        Continent continent = mock(Continent.class);
-        country.addGeographicalInformation(25000000, 7500000, continent);
-
-        assertThat(country).hasFieldOrPropertyWithValue("population", 25000000);
-        assertThat(country).hasFieldOrPropertyWithValue("area", 7500000);
-        assertThat(country).hasFieldOrPropertyWithValue("continent", continent);
-    }
-
-    @Test
-    public void addPoliticalInformationAddsInformation() {
-        Currency currency = mock(Currency.class);
-        HeadOfState headOfState = mock(HeadOfState.class);
-        Language language = mock(Language.class);
-        City capital = mock(City.class);
-
-        country.addPoliticalInformation(currency,headOfState, language, capital);
-
-        assertThat(country).hasFieldOrPropertyWithValue("currency", currency)
-                .hasFieldOrPropertyWithValue("headOfState", headOfState)
-                .hasFieldOrPropertyWithValue("language", language)
-                .hasFieldOrPropertyWithValue("capital", capital);
-
-    }
-
     @Test
     public void reelectTheHeadOfStateChangesPresident() throws Exception {
 
         Voting voting = mock(Voting.class);
         HeadOfState headOfState1 = mock(HeadOfState.class);
         HeadOfState headOfState2 = mock(HeadOfState.class);
-        country.addPoliticalInformation(null, headOfState1, null, null);
-        country.setVoting(voting);
+
+        Country country = new Country.Builder(1, "Australia").setVoting(voting).setHeadOfState(headOfState1).build();
 
         when(voting.vote(country)).thenReturn(90);
         country.reelectTheHeadOfState(headOfState2);
@@ -64,8 +36,7 @@ class CountryTest {
         Voting voting = mock(Voting.class);
         HeadOfState headOfState1 = mock(HeadOfState.class);
         HeadOfState headOfState2 = mock(HeadOfState.class);
-        country.addPoliticalInformation(null, headOfState1, null, null);
-        country.setVoting(voting);
+        Country country = new Country.Builder(1, "Australia").setHeadOfState(headOfState1).setVoting(voting).build();
 
         when(voting.vote(country)).thenReturn(10);
         Assertions.assertThrows(PopulationDidntSupportException.class, () -> country.reelectTheHeadOfState(headOfState2));
@@ -76,8 +47,8 @@ class CountryTest {
     public void changeCurrencyChangesCurrency() {
         Currency currency1 = mock(Currency.class);
         Currency currency2 = mock(Currency.class);
+        Country country = new Country.Builder(1, "Australia").setCurrency(currency1).build();
 
-        country.addPoliticalInformation(currency1, null, null, null);
         country.changeCurrency(currency2);
 
         assertThat(country).hasFieldOrPropertyWithValue("currency", currency2);
@@ -87,8 +58,8 @@ class CountryTest {
     public void changeOfficialLanguageChangesLanguage() {
         Language language1 = mock(Language.class);
         Language language2 = mock((Language.class));
+        Country country = new Country.Builder(1, "Australia").setLanguage(language1).build();
 
-        country.addPoliticalInformation(null, null, language1, null);
         country.changeOfficialLanguage(language2);
 
         assertThat(country).hasFieldOrPropertyWithValue("language", language2);
@@ -98,9 +69,9 @@ class CountryTest {
     public void moveTheCapitalMovesTheCapitalWhenNewCapitalInTheListOfCities() throws Exception {
         City city  = mock(City.class);
         Voting voting = mock(Voting.class);
+        Country country = new Country.Builder(1, "Australia").setVoting(voting).build();
 
         country.addCity(city);
-        country.setVoting(voting);
         when(voting.vote(country)).thenReturn(90);
         country.moveTheCapital(city);
 
@@ -111,8 +82,8 @@ class CountryTest {
     public void moveTheCapitalThrowsExceptionWhenCityIsntInTheListOfCities() throws Exception {
         City city  = mock(City.class);
         Voting voting = mock(Voting.class);
+        Country country = new Country.Builder(1, "Australia").setVoting(voting).build();
 
-        country.setVoting(voting);
         when(voting.vote(country)).thenReturn(10);
 
         Assertions.assertThrows(PopulationDidntSupportException.class, () -> country.moveTheCapital(city));
@@ -123,6 +94,7 @@ class CountryTest {
     public void sellTheCityRemovesCityFromTheListOfCities() throws Exception {
         City city1 = mock(City.class);
         Country country2 = mock((Country.class));
+        Country country = new Country.Builder(1, "Australia").build();
 
         country.addCity(city1);
         country.sellTheCity(city1, country2);
@@ -135,9 +107,9 @@ class CountryTest {
     public void sellTheCityThrowsExceptionWhenCityIsNotInTheList() throws Exception {
         City city1 = mock(City.class);
         Country country2 = mock((Country.class));
+        Country country = new Country.Builder(1, "Australia").build();
 
         Assertions.assertThrows(CityNotInTheListException.class, () -> country.sellTheCity(city1, country2));
-
     }
 
     @Test
@@ -147,6 +119,7 @@ class CountryTest {
     @Test
     public void addCityAddsCityToTheList() {
         City city = mock(City.class);
+        Country country = new Country.Builder(1, "Australia").build();
 
         country.addCity(city);
 
@@ -156,17 +129,18 @@ class CountryTest {
     @Test
     public void removeCityRemovesCityFromTheList() {
         City city = mock(City.class);
+        Country country = new Country.Builder(1, "Australia").build();
 
         country.addCity(city);
         country.removeCity(city);
 
         assertThat(country).hasFieldOrPropertyWithValue("cities", Arrays.asList());
-
     }
 
     @Test
     public void addGeoObjectAddsToTheMountainList() {
         Mountain mountain = mock(Mountain.class);
+        Country country = new Country.Builder(1, "Australia").build();
 
         country.addGeoObject(mountain);
 
@@ -177,6 +151,7 @@ class CountryTest {
     @Test
     public void addGeoObjectAddsToTheOceanList() {
         Ocean ocean = mock(Ocean.class);
+        Country country = new Country.Builder(1, "Australia").build();
 
         country.addGeoObject(ocean);
 
@@ -187,6 +162,7 @@ class CountryTest {
     @Test
     public void addGeoObjectAddsToTheSeasList() {
         Sea sea = mock(Sea.class);
+        Country country = new Country.Builder(1, "Australia").build();
 
         country.addGeoObject(sea);
 
@@ -197,6 +173,7 @@ class CountryTest {
     @Test
     public void removeGeoObjectRemovesFromTheMountainList() {
         Mountain mountain = mock(Mountain.class);
+        Country country = new Country.Builder(1, "Australia").build();
 
         country.addGeoObject(mountain);
         country.removeGeoObject(mountain);
@@ -208,6 +185,7 @@ class CountryTest {
     @Test
     public void removeGeoObjectRemovesFromTheOceanList() {
         Ocean ocean = mock(Ocean.class);
+        Country country = new Country.Builder(1, "Australia").build();
 
         country.addGeoObject(ocean);
         country.removeGeoObject(ocean);
@@ -219,6 +197,7 @@ class CountryTest {
     @Test
     public void removeGeoObjectRemovesFromTheSeasList() {
         Sea sea = mock(Sea.class);
+        Country country = new Country.Builder(1, "Australia").build();
 
         country.addGeoObject(sea);
         country.removeGeoObject(sea);

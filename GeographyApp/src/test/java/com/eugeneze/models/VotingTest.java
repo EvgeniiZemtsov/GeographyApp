@@ -20,14 +20,15 @@ class VotingTest {
         assertFalse(result == 0);
     }
 
-    @Test
-    void voteCityReturnsANumber() {
-        City city = mock(City.class);
-        when(city.getArea()).thenReturn(242000);
-        when(city.getPopulation()).thenReturn(66000000);
-
-        city.setVoting(voting);
-        int result = voting.vote(city);
-        assertFalse(result == 0);
-    }
+//
+//    @Test
+//    void voteCityReturnsANumber() {
+//        City city = mock(City.class);
+//        when(city.getArea()).thenReturn(242000);
+//        when(city.getPopulation()).thenReturn(66000000);
+//
+//        city.setVoting(voting);
+//        int result = voting.vote(city);
+//        assertFalse(result == 0);
+//    }
 }

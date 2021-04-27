@@ -22,4 +22,14 @@ public class Ocean extends GeographicalObject {
             this.area = area;
             this.maxDepth = maxDepth;
     }
+
+    public Object[] getObjects() {
+        return new Object[] {
+                id,
+                name,
+                area,
+                maxDepth,
+                countries
+        };
+    }
 }
