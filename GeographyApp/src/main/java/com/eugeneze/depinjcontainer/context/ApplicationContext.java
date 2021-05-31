@@ -19,7 +19,7 @@ public class ApplicationContext {
     private BeanFactory beanFactory;
     private final Map<Class, Object> beanMap = new ConcurrentHashMap<>();
 
-    private final Map<String, Class> properties = new HashMap<>();
+    private final Map<String, Class> objectFields = new HashMap<>();
     private String filepath;
 
     public ApplicationContext(String filepath) {
@@ -31,8 +31,8 @@ public class ApplicationContext {
         this.beanFactory = beanFactory;
     }
 
-    public Map<String, Class> getProperties() {
-        return properties;
+    public Map<String, Class> getObjectFields() {
+        return objectFields;
     }
 
     public <T> T getBean(Class<T> clazz) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -81,7 +81,7 @@ public class ApplicationContext {
                         if (childNode.getNodeType() == Node.ELEMENT_NODE) {
                             String[] fieldNameParts = childNode.getAttributes().item(0).toString().split("\"");
                             String fieldName = fieldNameParts[1];
-                            properties.put(fieldName, clazz);
+                            objectFields.put(fieldName, clazz);
                         }
                     }
                 }

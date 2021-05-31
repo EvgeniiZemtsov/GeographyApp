@@ -18,13 +18,13 @@ public class BeanFactory {
     private final BeanConfigurator beanConfigurator;
     private final ApplicationContext applicationContext;
 
-    private final Map<String, Class> properties;
+    private final Map<String, Class> objectFields;
 
     public BeanFactory(ApplicationContext applicationContext) {
         this.configuration = new JavaConfiguration();
         this.beanConfigurator = new JavaBeanConfigurator(configuration.getPackageToScan());
         this.applicationContext = applicationContext;
-        this.properties = applicationContext.getProperties();
+        this.objectFields = applicationContext.getObjectFields();
     }
 
     public <T> T getBean(Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
@@ -33,7 +33,7 @@ public class BeanFactory {
             implementationClass = beanConfigurator.getImplementationClass(implementationClass);
         }
         T bean = implementationClass.getDeclaredConstructor().newInstance();
-        for (Field field : Arrays.stream(implementationClass.getDeclaredFields()).filter(field -> properties.get(field.getName()).equals(clazz)).collect(Collectors.toList())) {
+        for (Field field : Arrays.stream(implementationClass.getDeclaredFields()).filter(field -> objectFields.get(field.getName()).equals(clazz)).collect(Collectors.toList())) {
             field.setAccessible(true);
             field.set(bean, applicationContext.getBean(field.getType()));
         }
