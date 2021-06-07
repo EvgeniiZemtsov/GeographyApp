@@ -1,30 +1,37 @@
 package com.eugeneze.models;
 
+import javax.persistence.*;
+
 /**
  * Класс "Достопримечательности"
  */
+
+@Entity
+@Table(name = "sights")
 public class Sight {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "name")
     private String name;
     /**
      * Город, в котором находится достопричечательность
      */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
     private City city;
 
-//    public Sight(int id, String name) {
-//        this.id = id;
-//        this.name = name;
-//    }
+    public Sight(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     private Sight(Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
     }
 
-    /**
-     * Метод ограничивает доступ к достопримечательности для посетителей
-     */
-    public void restrictAccessForVisitors() {
+    public Sight() {
 
     }
 
@@ -35,16 +42,6 @@ public class Sight {
         this.city = city;
         city.addSight(this);
     }
-
-//    public String declareAsACulturalMonument() {
-//        String result = null;
-//        if (Voting.vote(city) > 75) {
-//            result = "Now it's cultural monument. Congratulation!!!";
-//        } else {
-//            result = "The proposal wasn't approved by the population.";
-//        }
-//        return result;
-//    }
 
     public Object[] getObjects() {
         return new Object[] {
@@ -72,5 +69,13 @@ public class Sight {
         public Sight build() {
             return new Sight(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Sight{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

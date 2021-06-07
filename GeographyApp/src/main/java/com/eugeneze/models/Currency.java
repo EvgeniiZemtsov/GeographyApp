@@ -1,5 +1,6 @@
 package com.eugeneze.models;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,23 +8,33 @@ import java.util.List;
  * Класс Валюта
  */
 
+@Entity
+@Table(name = "currency")
 public class Currency {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "name")
     private String name;
     /**
      * Поле, хранящее трёхбуквенное обозначение валюты(EUR, USD и т.д.)
      */
+    @Column(name = "currency_code")
     private String code;
 
     /**
      * Поле, хранящее список стран, в которых используется эта валюта
      */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "currency")
     private final List<Country> countries = new ArrayList<>();
 
     public Currency(int id, String name, String code) {
         this.id = id;
         this.name = name;
         this.code = code;
+    }
+
+    public Currency() {
     }
 
     /**
@@ -64,5 +75,14 @@ public class Currency {
         int result = name.hashCode();
         result = 31 * result + code.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Currency{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                '}';
     }
 }

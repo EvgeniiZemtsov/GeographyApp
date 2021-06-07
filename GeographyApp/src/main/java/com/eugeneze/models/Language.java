@@ -1,24 +1,31 @@
 package com.eugeneze.models;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Класс Язык
  */
-
+@Entity
+@Table(name = "languages")
 public class Language {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "name")
     private String name;
 
     /**
      * Поле, хранящее информацию о количестве носителей языка
      */
+    @Column(name = "number_of_native_speakers")
     private int numberOfNativeSpeakers;
 
     /**
      * Поле, хранящее список стран, в которых используется этот язык
      */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "language")
     private final List<Country> countries = new ArrayList<>();
 
 //    public Language(int id, String name) {
@@ -30,6 +37,10 @@ public class Language {
         this.id = builder.id;
         this.name = builder.name;
         this.numberOfNativeSpeakers = builder.numberOfNativeSpeakers;
+    }
+
+    public Language() {
+
     }
 
     /**
@@ -91,5 +102,14 @@ public class Language {
         int result = name.hashCode();
         result = 31 * result + numberOfNativeSpeakers;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Language{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", numberOfNativeSpeakers=" + numberOfNativeSpeakers +
+                '}';
     }
 }

@@ -1,18 +1,44 @@
 package com.eugeneze.models;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Класс Океан
  */
 
-public class Ocean extends GeographicalObject {
+@Entity
+@Table(name = "oceans")
+public class Ocean implements GeographicalObject {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Column(name = "name")
+    private String name;
     /**
      * Поля, определяющие размер моря
      */
+    @Column(name = "area")
     private int area;
+    @Column(name = "max_depth")
     private int maxDepth;
 
+    /**
+     * Поле хранит список стран, на територии которых находится географический объект
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "country_ocean",
+            joinColumns = @JoinColumn(name = "ocean_id"),
+            inverseJoinColumns = @JoinColumn(name = "country_id"))
+    private List<Country> countries = new ArrayList<>();
+
     public Ocean(int id, String name) {
-        super(id, name);
+        this.id = id;
+        this.name = name;
+    }
+
+    public Ocean() {
     }
 
     /**
@@ -23,6 +49,10 @@ public class Ocean extends GeographicalObject {
             this.maxDepth = maxDepth;
     }
 
+    public List<Country> getCountries() {
+        return countries;
+    }
+
     public Object[] getObjects() {
         return new Object[] {
                 id,
@@ -31,5 +61,15 @@ public class Ocean extends GeographicalObject {
                 maxDepth,
                 countries
         };
+    }
+
+    @Override
+    public String toString() {
+        return "Ocean{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", area=" + area +
+                ", maxDepth=" + maxDepth +
+                '}';
     }
 }

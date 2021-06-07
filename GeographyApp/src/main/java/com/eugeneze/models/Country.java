@@ -1,65 +1,106 @@
 package com.eugeneze.models;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Класс Страна
  */
 
+@Entity
+@Table(name = "country_general")
 public class Country {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "name")
     private String name;
+    @Column(name = "population")
     private int population;
+    @Column(name = "area")
     private int area;
 
     /**
      * Поле, хранящее информацию о государственной валюте
      */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "currency_id")
     private Currency currency;
 
     /**
      * Поле, хранящее информацию о главе государства
      */
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "head_of_state_id")
     private HeadOfState headOfState;
 
     /**
      * Поле, хранящее информацию о государственном языке
      */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "language_id")
     private Language language;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "continent_id")
     private Continent continent;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "country_capital",
+        joinColumns = @JoinColumn(name = "country_id"),
+            inverseJoinColumns = @JoinColumn(name = "city_id"))
     private City capital;
 
     /**
      * Переменная, содержащая объект, отвечающий за организацию голосования и подсчёт результатов
      */
+    @Transient
     private Voting voting;
 
 
     /**
      * Поле, хранящее список городов, находящихся в стране
      */
-    private final List<City> cities = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "country", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<City> cities = new HashSet<>();
 
     /**
      * Поле, хранящее список гор, находящихся в стране
      */
-    private final List<Mountain> mountains = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "country_mountain",
+        joinColumns = @JoinColumn(name = "country_id"),
+        inverseJoinColumns = @JoinColumn(name = "mountain_id"))
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<Mountain> mountains = new HashSet<>();
 
     /**
      * Поле, хранящее список морей, находящихся в стране
      */
-    private final List<Sea> seas = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "country_sea",
+            joinColumns = @JoinColumn(name = "country_id"),
+            inverseJoinColumns = @JoinColumn(name = "sea_id"))
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<Sea> seas = new HashSet<>();
 
     /**
      * Поле, хранящее список океанов, находящихся в стране
      */
-    private final List<Ocean> oceans = new ArrayList<>();
-
-//    public Country(int id, String name) {
-//        this.id = id;
-//        this.name = name;
-//    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "country_ocean",
+            joinColumns = @JoinColumn(name = "country_id"),
+            inverseJoinColumns = @JoinColumn(name = "ocean_id"))
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<Ocean> oceans = new HashSet<>();
 
     private Country(Builder builder) {
         this.id = builder.id;
@@ -73,6 +114,9 @@ public class Country {
         this.capital = builder.capital;
         this.voting = builder.voting;
 
+    }
+
+    public Country() {
     }
 
     /**
@@ -186,26 +230,6 @@ public class Country {
         return area;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Country)) return false;
-
-        Country country = (Country) o;
-
-        if (population != country.population) return false;
-        if (area != country.area) return false;
-        return name.equals(country.name);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + population;
-        result = 31 * result + area;
-        return result;
-    }
-
     public Object[] getObjects() {
         return new Object[] {
                 id,
@@ -286,5 +310,40 @@ public class Country {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Country)) return false;
 
+        Country country = (Country) o;
+
+        if (population != country.population) return false;
+        if (area != country.area) return false;
+        return name.equals(country.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + population;
+        result = 31 * result + area;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Country{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", population=" + population +
+                ", area=" + area +
+                ", currency=" + currency +
+                ", headOfState=" + headOfState +
+                ", language=" + language +
+                ", continent=" + continent +
+                ", capital=" + capital +
+                ", cities=" + cities +
+                ", oceans=" + oceans +
+                '}';
+    }
 }

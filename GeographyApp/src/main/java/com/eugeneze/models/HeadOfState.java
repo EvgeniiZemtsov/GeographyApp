@@ -1,25 +1,34 @@
 package com.eugeneze.models;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
 /**
  * Класс Глава государства
  */
-
+@Entity
+@Table(name = "current_heads_of_states")
 public class HeadOfState {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
     /**
      * Поле, хранящее название должности
      */
+    @Column(name = "title")
     private String title;
 
     /**
      * Страна, главой которой является человек
      */
+    @OneToOne(optional=false, mappedBy="headOfState")
     private Country workPlace;
 
     private HeadOfState(Builder builder) {
@@ -29,6 +38,10 @@ public class HeadOfState {
         this.dateOfBirth = builder.dateOfBirth;
         this.title = builder.title;
         this.workPlace = builder.workPlace;
+
+    }
+
+    public HeadOfState() {
 
     }
 
@@ -45,30 +58,6 @@ public class HeadOfState {
      */
     public void leaveThePostOfHeadOfState() {
         workPlace = null;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof HeadOfState)) return false;
-
-        HeadOfState that = (HeadOfState) o;
-
-        if (!firstName.equals(that.firstName)) return false;
-        if (!lastName.equals(that.lastName)) return false;
-        if (!dateOfBirth.equals(that.dateOfBirth)) return false;
-        if (!Objects.equals(title, that.title)) return false;
-        return Objects.equals(workPlace, that.workPlace);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = firstName.hashCode();
-        result = 31 * result + lastName.hashCode();
-        result = 31 * result + dateOfBirth.hashCode();
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (workPlace != null ? workPlace.hashCode() : 0);
-        return result;
     }
 
     public Object[] getObjects() {
@@ -115,5 +104,40 @@ public class HeadOfState {
             return new HeadOfState(this);
         }
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HeadOfState)) return false;
+
+        HeadOfState that = (HeadOfState) o;
+
+        if (!firstName.equals(that.firstName)) return false;
+        if (!lastName.equals(that.lastName)) return false;
+        if (!dateOfBirth.equals(that.dateOfBirth)) return false;
+        if (!Objects.equals(title, that.title)) return false;
+        return Objects.equals(workPlace, that.workPlace);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        result = 31 * result + dateOfBirth.hashCode();
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (workPlace != null ? workPlace.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "HeadOfState{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", title='" + title + '\'' +
+                '}';
     }
 }
