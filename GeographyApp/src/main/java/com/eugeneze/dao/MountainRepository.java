@@ -1,24 +1,22 @@
 package com.eugeneze.dao;
 
 import com.eugeneze.dao.specifications.Specification;
-import com.eugeneze.models.*;
+import com.eugeneze.models.City;
+import com.eugeneze.models.Mountain;
 import com.eugeneze.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class CountryRepository implements Repository<Country> {
-
+public class MountainRepository implements Repository<Mountain> {
     @Override
-    public List<Country> query(Specification<Country> specification) {
+    public List<Mountain> query(Specification<Mountain> specification) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
         session.getTransaction().begin();
         Query query = session.createQuery(specification.getHqlQuery());
-        List<Country> resultList = query.getResultList();
+        List<Mountain> resultList = query.getResultList();
         session.getTransaction().commit();
         session.close();
 
@@ -26,24 +24,24 @@ public class CountryRepository implements Repository<Country> {
     }
 
     @Override
-    public void create(Country country) {
+    public void create(Mountain mountain) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
         session.getTransaction().begin();
 
-        session.save(country);
+        session.save(mountain);
 
         session.getTransaction().commit();
         session.close();
     }
 
     @Override
-    public void update(Country country) {
+    public void update(Mountain mountain) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
         session.getTransaction().begin();
 
-        session.update(country);
+        session.update(mountain);
 
         session.getTransaction().commit();
         session.close();
@@ -55,11 +53,10 @@ public class CountryRepository implements Repository<Country> {
 
         session.getTransaction().begin();
 
-        Country country = session.get(Country.class, id);
-        session.delete(country);
+        Mountain mountain = session.get(Mountain.class, id);
+        session.delete(mountain);
 
         session.getTransaction().commit();
         session.close();
     }
-
 }

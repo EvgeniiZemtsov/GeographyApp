@@ -1,24 +1,23 @@
 package com.eugeneze.dao;
 
 import com.eugeneze.dao.specifications.Specification;
-import com.eugeneze.models.*;
+import com.eugeneze.models.City;
+import com.eugeneze.models.HeadOfState;
 import com.eugeneze.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class CountryRepository implements Repository<Country> {
+public class HeadOfStateRepository implements Repository<HeadOfState> {
 
     @Override
-    public List<Country> query(Specification<Country> specification) {
+    public List<HeadOfState> query(Specification<HeadOfState> specification) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
         session.getTransaction().begin();
         Query query = session.createQuery(specification.getHqlQuery());
-        List<Country> resultList = query.getResultList();
+        List<HeadOfState> resultList = query.getResultList();
         session.getTransaction().commit();
         session.close();
 
@@ -26,24 +25,24 @@ public class CountryRepository implements Repository<Country> {
     }
 
     @Override
-    public void create(Country country) {
+    public void create(HeadOfState headOfState) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
         session.getTransaction().begin();
 
-        session.save(country);
+        session.save(headOfState);
 
         session.getTransaction().commit();
         session.close();
     }
 
     @Override
-    public void update(Country country) {
+    public void update(HeadOfState headOfState) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
         session.getTransaction().begin();
 
-        session.update(country);
+        session.update(headOfState);
 
         session.getTransaction().commit();
         session.close();
@@ -55,11 +54,10 @@ public class CountryRepository implements Repository<Country> {
 
         session.getTransaction().begin();
 
-        Country country = session.get(Country.class, id);
-        session.delete(country);
+        HeadOfState headOfState = session.get(HeadOfState.class, id);
+        session.delete(headOfState);
 
         session.getTransaction().commit();
         session.close();
     }
-
 }
