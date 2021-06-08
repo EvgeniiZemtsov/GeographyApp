@@ -1,24 +1,21 @@
 package com.eugeneze.dao;
 
 import com.eugeneze.dao.specifications.Specification;
-import com.eugeneze.models.*;
+import com.eugeneze.models.Ocean;
 import com.eugeneze.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class CountryRepository implements Repository<Country> {
-
+public class OceanRepository implements Repository<Ocean>{
     @Override
-    public List<Country> query(Specification<Country> specification) {
+    public List<Ocean> query(Specification<Ocean> specification) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
         session.getTransaction().begin();
         Query query = session.createQuery(specification.getHqlQuery());
-        List<Country> resultList = query.getResultList();
+        List<Ocean> resultList = query.getResultList();
         session.getTransaction().commit();
         session.close();
 
@@ -26,24 +23,24 @@ public class CountryRepository implements Repository<Country> {
     }
 
     @Override
-    public void create(Country country) {
+    public void create(Ocean ocean) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
         session.getTransaction().begin();
 
-        session.save(country);
+        session.save(ocean);
 
         session.getTransaction().commit();
         session.close();
     }
 
     @Override
-    public void update(Country country) {
+    public void update(Ocean ocean) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
         session.getTransaction().begin();
 
-        session.update(country);
+        session.update(ocean);
 
         session.getTransaction().commit();
         session.close();
@@ -55,11 +52,10 @@ public class CountryRepository implements Repository<Country> {
 
         session.getTransaction().begin();
 
-        Country country = session.get(Country.class, id);
-        session.delete(country);
+        Ocean ocean = session.get(Ocean.class, id);
+        session.delete(ocean);
 
         session.getTransaction().commit();
         session.close();
     }
-
 }

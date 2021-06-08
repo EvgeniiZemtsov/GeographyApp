@@ -1,24 +1,23 @@
 package com.eugeneze.dao;
 
 import com.eugeneze.dao.specifications.Specification;
-import com.eugeneze.models.*;
+import com.eugeneze.models.City;
+import com.eugeneze.models.Currency;
 import com.eugeneze.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class CountryRepository implements Repository<Country> {
+public class CurrencyRepository implements Repository<Currency> {
 
     @Override
-    public List<Country> query(Specification<Country> specification) {
+    public List<Currency> query(Specification<Currency> specification) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
         session.getTransaction().begin();
         Query query = session.createQuery(specification.getHqlQuery());
-        List<Country> resultList = query.getResultList();
+        List<Currency> resultList = query.getResultList();
         session.getTransaction().commit();
         session.close();
 
@@ -26,24 +25,24 @@ public class CountryRepository implements Repository<Country> {
     }
 
     @Override
-    public void create(Country country) {
+    public void create(Currency currency) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
         session.getTransaction().begin();
 
-        session.save(country);
+        session.save(currency);
 
         session.getTransaction().commit();
         session.close();
     }
 
     @Override
-    public void update(Country country) {
+    public void update(Currency currency) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
         session.getTransaction().begin();
 
-        session.update(country);
+        session.update(currency);
 
         session.getTransaction().commit();
         session.close();
@@ -55,11 +54,10 @@ public class CountryRepository implements Repository<Country> {
 
         session.getTransaction().begin();
 
-        Country country = session.get(Country.class, id);
-        session.delete(country);
+        Currency currency = session.get(Currency.class, id);
+        session.delete(currency);
 
         session.getTransaction().commit();
         session.close();
     }
-
 }

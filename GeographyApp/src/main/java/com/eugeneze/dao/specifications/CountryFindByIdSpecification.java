@@ -1,13 +1,13 @@
-package com.eugeneze.dao;
+package com.eugeneze.dao.specifications;
 
 import com.eugeneze.models.Country;
 
 import java.lang.reflect.Field;
 
-public class FindByIdSpecification extends AbstractSpecification<Country> {
+public class CountryFindByIdSpecification implements Specification<Country> {
     private int id;
 
-    public FindByIdSpecification(int id) {
+    public CountryFindByIdSpecification(int id) {
         this.id = id;
     }
 
@@ -29,7 +29,13 @@ public class FindByIdSpecification extends AbstractSpecification<Country> {
     }
 
     @Override
+    public String getHqlQuery() {
+        return "FROM Country where id = " + id;
+    }
+
+
     public String toSqlClause() {
-        return String.format("id = %d ", id);
+        return "country_general.country_id = " + id + ";";
+//        return String.format("id = %d ", id);
     }
 }

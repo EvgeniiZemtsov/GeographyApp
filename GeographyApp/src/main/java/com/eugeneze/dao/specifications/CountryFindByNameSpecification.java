@@ -1,13 +1,13 @@
-package com.eugeneze.dao;
+package com.eugeneze.dao.specifications;
 
 import com.eugeneze.models.Country;
 
 import java.lang.reflect.Field;
 
-public class FindByNameSpecification extends AbstractSpecification<Country> {
+public class CountryFindByNameSpecification implements Specification<Country> {
     private String name;
 
-    public FindByNameSpecification(String name) {
+    public CountryFindByNameSpecification(String name) {
         this.name = name;
     }
 
@@ -28,8 +28,12 @@ public class FindByNameSpecification extends AbstractSpecification<Country> {
     }
 
     @Override
+    public String getHqlQuery() {
+        return "FROM Country where name = '" + name + "'";
+    }
+
     public String toSqlClause() {
-        return String.format(" name = %s ", name);
+        return String.format("country_general.name = '%s';", name);
     }
 
 

@@ -1,5 +1,6 @@
 package com.eugeneze.models;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,21 +8,39 @@ import java.util.List;
  * Класс Город
  */
 
+@Entity
+@Table(name = "cities")
 public class City {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "name")
     private String name;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "country_id")
     private Country country;
+
+    @Column(name = "area")
     private int area;
+
+    @Column(name = "population")
     private int population;
     /**
      * Переменная, хранящая список достопримечательностей, находящихся в городе
      */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "city")
     private List<Sight> sights = new ArrayList<>();
 
     /**
      * Переменная, содержащая объект, отвечающий за организацию голосования и подсчёт результатов
      */
+    @Transient
     private Voting voting;
+
+    public City() {
+    }
 
     private City(Builder builder) {
         this.id = builder.id;
@@ -31,6 +50,7 @@ public class City {
         this.population = builder.population;
 
     }
+
 
     /**
      * Метод меняет название города
@@ -88,28 +108,6 @@ public class City {
         return population;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof City)) return false;
-
-        City city = (City) o;
-
-        if (area != city.area) return false;
-        if (population != city.population) return false;
-        if (!name.equals(city.name)) return false;
-        return country != null ? country.equals(city.country) : city.country == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + (country != null ? country.hashCode() : 0);
-        result = 31 * result + area;
-        result = 31 * result + population;
-        return result;
-    }
-
     public Object[] getObjects() {
         return new Object[] {
                 id,
@@ -153,4 +151,35 @@ public class City {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof City)) return false;
+
+        City city = (City) o;
+
+        if (area != city.area) return false;
+        if (population != city.population) return false;
+        if (!name.equals(city.name)) return false;
+        return country != null ? country.equals(city.country) : city.country == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        result = 31 * result + area;
+        result = 31 * result + population;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "City{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", area=" + area +
+                ", population=" + population +
+                '}';
+    }
 }

@@ -1,14 +1,14 @@
 package com.eugeneze.dao;
 
-import com.eugeneze.models.Country;
+import com.eugeneze.dao.specifications.Specification;
 
 import java.util.List;
 
-public interface Repository {
+public interface Repository<T> {
 
-    List<Country> query(Specification<Country> countrySpecification);
+    List<T> query(Specification<T> specification);
 
-    void create(Country country);
-    void update(Country country);
-    void delete(String id);
+    void create(T t);
+    void update(T t);
+    void delete(int id);
 }
