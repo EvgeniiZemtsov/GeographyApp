@@ -1,8 +1,9 @@
 package com.eugeneze.converters;
 
-import com.eugeneze.models.Currency;
 import com.eugeneze.models.Language;
+import org.springframework.stereotype.Component;
 
+@Component
 public class LanguageConverter {
     public String convertToJson(Language language) {
         Object[] dataLanguage = language.getObjects();
@@ -19,8 +20,7 @@ public class LanguageConverter {
         Language language = null;
 
         String[] data = json.split("\".+?\": ");
-        language = new Language.Builder(Integer.parseInt(data[1].substring(0, data[1].length() - 3)),
-                data[2].replaceAll(",\n ", ""))
+        language = new Language.Builder(data[2].replaceAll(",\n ", ""))
                 .setNumberOfNativeSpeakers(Integer.parseInt(data[3].substring(0, data[3].length() - 2))).build();
 
         return language;

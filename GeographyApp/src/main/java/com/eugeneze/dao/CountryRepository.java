@@ -5,11 +5,11 @@ import com.eugeneze.models.*;
 import com.eugeneze.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.springframework.stereotype.Component;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class CountryRepository implements Repository<Country> {
 
     @Override
@@ -31,7 +31,7 @@ public class CountryRepository implements Repository<Country> {
 
         session.getTransaction().begin();
 
-        session.save(country);
+        session.saveOrUpdate(country);
 
         session.getTransaction().commit();
         session.close();

@@ -5,9 +5,11 @@ import com.eugeneze.models.Ocean;
 import com.eugeneze.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class OceanRepository implements Repository<Ocean>{
     @Override
     public List<Ocean> query(Specification<Ocean> specification) {

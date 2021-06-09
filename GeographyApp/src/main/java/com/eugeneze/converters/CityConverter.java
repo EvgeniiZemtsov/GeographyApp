@@ -1,7 +1,9 @@
 package com.eugeneze.converters;
 
 import com.eugeneze.models.*;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CityConverter {
 
     public String convertToJson(City city) {
@@ -29,10 +31,10 @@ public class CityConverter {
     public City convertJsonToObject(String json) {
         City city = null;
         String[] data = json.split("\".+?\": ");
-        city = new City.Builder(Integer.parseInt(data[1].substring(0, data[1].length() - 3)), data[2].replaceAll(",\n ", ""))
+        city = new City.Builder(data[2].replaceAll(",\n ", ""))
                 .setArea(Integer.parseInt(data[3].substring(0, data[3].length() - 3)))
                 .setPopulation(Integer.parseInt(data[4].substring(0, data[4].length() - 3)))
-                .setCountry(new Country.Builder(Integer.parseInt(data[6].substring(0, data[6].length() - 4)), data[7].replaceAll(",\n  ", ""))
+                .setCountry(new Country.Builder(data[7].replaceAll(",\n  ", ""))
                         .setArea(Integer.parseInt(data[8].substring(0, data[8].length() - 4)))
                         .setPopulation(Integer.parseInt(data[9].substring(0, data[9].length() - 6))).build()).build();
         return city;
