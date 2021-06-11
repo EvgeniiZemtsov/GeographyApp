@@ -3,9 +3,12 @@ package com.eugeneze.servlets;
 import com.eugeneze.converters.CountryConverter;
 import com.eugeneze.dao.CountryRepository;
 import com.eugeneze.dao.DBPool;
-import com.eugeneze.dao.FindByIdSpecification;
-import com.eugeneze.dao.FindByNameSpecification;
+import com.eugeneze.dao.specifications.CountryFindByIdSpecification;
+import com.eugeneze.dao.specifications.CountryFindByNameSpecification;
 import com.eugeneze.models.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -17,15 +20,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 @WebServlet(urlPatterns = {"/countries/*", "/countries"})
 public class CountryServlet extends HttpServlet {
 
-    private final String user = "postgres";
-    private final String password = "lamborgini235";
-    private final String url = "jdbc:postgresql://localhost:5432/geography";
+    ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 
-    CountryRepository repository = new CountryRepository(new DBPool(user, url, password));
-    CountryConverter converter = new CountryConverter();
+    private CountryRepository repository = context.getBean("countryRepository", CountryRepository.class);
+    private CountryConverter converter = context.getBean("countryConverter", CountryConverter.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -38,15 +40,19 @@ public class CountryServlet extends HttpServlet {
 
         if (matcher.find()) {
             String[] urlParts = request.getRequestURL().toString().split("/");
-            result = repository.query(new FindByIdSpecification(Integer.parseInt(urlParts[4])));
+            result = repository.query(new CountryFindByIdSpecification(Integer.parseInt(urlParts[4])));
         } else {
-            result = repository.query(new FindByNameSpecification(request.getParameter("name")));
+            result = repository.query(new CountryFindByNameSpecification(request.getParameter("name")));
         }
 
-        for (Country country : result) {
-            String countryJson = converter.convertToJson(country);
-            printWriter.append(countryJson);
-            printWriter.append("\n");
+        try {
+            for (Country country : result) {
+                String countryJson = converter.convertToJson(country);
+                printWriter.append(countryJson);
+                printWriter.append("\n");
+            }
+        } catch (NullPointerException e) {
+            printWriter.append("The country " + request.getParameter("name") + " not founded. We are sorry");
         }
 
         response.setHeader("Content-Type", "application/json");
@@ -60,8 +66,11 @@ public class CountryServlet extends HttpServlet {
         BufferedReader reader = request.getReader();
         while (reader.ready()) {
             requestBody.append(reader.readLine());
+            requestBody.append("\n");
         }
-        repository.create(converter.convertJsonToObject(requestBody.toString()));
+
+        Country country = converter.convertJsonToObject(requestBody.toString());
+        repository.create(country);
         reader.close();
     }
 
@@ -73,6 +82,7 @@ public class CountryServlet extends HttpServlet {
         BufferedReader reader = request.getReader();
         while (reader.ready()) {
             requestBody.append(reader.readLine());
+            requestBody.append("\n");
         }
         repository.update(converter.convertJsonToObject(requestBody.toString()));
         reader.close();
@@ -83,6 +93,6 @@ public class CountryServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String[] urlParts = request.getRequestURL().toString().split("/");
-        repository.delete(urlParts[4]);
+        repository.delete(Integer.parseInt(urlParts[4]));
     }
 }

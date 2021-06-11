@@ -1,14 +1,15 @@
 package com.eugeneze.dao;
 
 import com.eugeneze.dao.specifications.Specification;
-import com.eugeneze.models.City;
 import com.eugeneze.models.Sight;
 import com.eugeneze.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class SightRepository implements Repository<Sight>{
     @Override
     public List<Sight> query(Specification<Sight> specification) {

@@ -1,9 +1,9 @@
 package com.eugeneze.converters;
 
 import com.eugeneze.models.*;
+import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-
+@Component
 public class CountryConverter {
 
     public String convertToJson(Country country) {
@@ -50,23 +50,21 @@ public class CountryConverter {
     public Country convertJsonToObject(String json) {
         Country country = null;
         String[] data = json.split("\".+?\": ");
-        country = new Country.Builder(Integer.parseInt(data[1].substring(0, data[1].length() - 3)), data[2].replaceAll(",\n ", ""))
+        country = new Country.Builder(data[2].replaceAll(",\n ", ""))
                 .setArea(Integer.parseInt(data[3].substring(0, data[3].length() - 3)))
                 .setPopulation(Integer.parseInt(data[4].substring(0, data[4].length() - 3)))
-                .setHeadOfState(new HeadOfState.Builder(Integer.parseInt(data[6].substring(0, data[6].length() - 4)),
-                        data[7].replaceAll(",\n  ", ""), data[8].replaceAll(",\n  ", ""))
+                .setHeadOfState(new HeadOfState.Builder(data[7].replaceAll(",\n  ", ""), data[8].replaceAll(",\n  ", ""))
 //                        .setDateOfBirth(data[9].equals("null,\n") ? null : LocalDate.parse(data[9].substring(0, data[17].length() - 3)))
                         .setTitle(data[10].substring(0, data[10].length() - 7)).build())
-                .setLanguage(new Language.Builder(Integer.parseInt(data[12].substring(0, data[12].length() - 4)), data[13].replaceAll(",\n  ", "")).
+                .setLanguage(new Language.Builder(data[13].replaceAll(",\n  ", "")).
                         setNumberOfNativeSpeakers(Integer.parseInt(data[14].substring(0, data[14].length() - 6))).build())
                 .setContinent(new Continent(Integer.parseInt(data[16].substring(0, data[16].length() - 4)),
                         data[17].replaceAll(",\n  ", ""),
                         Integer.parseInt(data[18].substring(0, data[18].length() - 6))))
-                .setCapital(new City.Builder(Integer.parseInt(data[20].substring(0, data[20].length() - 4)), data[21].replaceAll(",\n  ", "")).
-                        setArea(Integer.parseInt(data[23].substring(0, data[23].length() - 4))).
-                        setPopulation(Integer.parseInt(data[24].substring(0, data[24].length() - 6))).build())
-                .setCurrency(new Currency(Integer.parseInt(data[26].substring(0, data[26].length() - 4)),
-                        data[27].replaceAll(",\n  ", ""),
+//                .setCapital(new City.Builder(data[21].replaceAll(",\n  ", "")).
+//                        setArea(Integer.parseInt(data[23].substring(0, data[23].length() - 4))).
+//                        setPopulation(Integer.parseInt(data[24].substring(0, data[24].length() - 6))).build())
+                .setCurrency(new Currency(data[27].replaceAll(",\n  ", ""),
                         data[28].substring(0, data[28].length() - 6))).build();
 
         return country;
