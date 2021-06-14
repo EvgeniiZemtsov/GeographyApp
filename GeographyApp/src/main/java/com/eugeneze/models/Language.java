@@ -1,5 +1,8 @@
 package com.eugeneze.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,20 +15,24 @@ import java.util.List;
 public class Language {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty
     private int id;
     @Column(name = "name")
+    @JsonProperty
     private String name;
 
     /**
      * Поле, хранящее информацию о количестве носителей языка
      */
     @Column(name = "number_of_native_speakers")
+    @JsonProperty
     private int numberOfNativeSpeakers;
 
     /**
      * Поле, хранящее список стран, в которых используется этот язык
      */
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "language")
+
     private final List<Country> countries = new ArrayList<>();
 
 //    public Language(int id, String name) {
@@ -34,13 +41,11 @@ public class Language {
 //    }
 
     private Language(Builder builder) {
-        this.id = builder.id;
         this.name = builder.name;
         this.numberOfNativeSpeakers = builder.numberOfNativeSpeakers;
     }
 
     public Language() {
-
     }
 
     /**
@@ -57,6 +62,15 @@ public class Language {
         countries.remove(country);
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setNumberOfNativeSpeakers(int numberOfNativeSpeakers) {
+        this.numberOfNativeSpeakers = numberOfNativeSpeakers;
+    }
+
+    @JsonIgnore
     public Object[] getObjects() {
         return new Object[] {
                 id,
@@ -71,8 +85,7 @@ public class Language {
         private String name;
         private int numberOfNativeSpeakers;
 
-        public Builder(int id, String name) {
-            this.id = id;
+        public Builder(String name) {
             this.name = name;
         }
 

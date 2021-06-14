@@ -1,5 +1,8 @@
 package com.eugeneze.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +16,17 @@ import java.util.List;
 public class Mountain implements GeographicalObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty
     private int id;
     @Column(name = "name")
+    @JsonProperty
     private String name;
 
     /**
      * Поле, определяющее высоту горы
      */
     @Column(name = "height")
+    @JsonProperty
     private int height;
 
     /**
@@ -40,6 +46,10 @@ public class Mountain implements GeographicalObject {
         this.name = name;
     }
 
+    public Mountain(String name) {
+        this.name = name;
+    }
+
     /**
      * Метод устанавливает высоту горы
      */
@@ -47,10 +57,16 @@ public class Mountain implements GeographicalObject {
             this.height = height;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @JsonIgnore
     public List<Country> getCountries() {
         return countries;
     }
 
+    @JsonIgnore
     public Object[] getObjects() {
         return new Object[] {
                 id,

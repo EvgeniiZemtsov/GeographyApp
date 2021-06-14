@@ -1,5 +1,8 @@
 package com.eugeneze.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -12,27 +15,31 @@ import java.util.Objects;
 public class HeadOfState {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty
     private int id;
     @Column(name = "first_name")
+    @JsonProperty
     private String firstName;
     @Column(name = "last_name")
+    @JsonProperty
     private String lastName;
     @Column(name = "date_of_birth")
+    @JsonProperty
     private LocalDate dateOfBirth;
     /**
      * Поле, хранящее название должности
      */
     @Column(name = "title")
+    @JsonProperty
     private String title;
 
     /**
      * Страна, главой которой является человек
      */
-    @OneToOne(optional=false, mappedBy="headOfState")
+    @OneToOne(mappedBy="headOfState")
     private Country workPlace;
 
     private HeadOfState(Builder builder) {
-        this.id = builder.id;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
         this.dateOfBirth = builder.dateOfBirth;
@@ -42,7 +49,18 @@ public class HeadOfState {
     }
 
     public HeadOfState() {
+    }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**
@@ -60,6 +78,7 @@ public class HeadOfState {
         workPlace = null;
     }
 
+    @JsonIgnore
     public Object[] getObjects() {
         return new Object[] {
                 id,
@@ -79,8 +98,7 @@ public class HeadOfState {
         private String title;
         private Country workPlace;
 
-        public Builder(int id, String firstName, String lastName) {
-            this.id = id;
+        public Builder(String firstName, String lastName) {
             this.firstName = firstName;
             this.lastName = lastName;
         }

@@ -1,5 +1,8 @@
 package com.eugeneze.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +16,16 @@ import java.util.List;
 public class Currency {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty
     private int id;
     @Column(name = "name")
+    @JsonProperty
     private String name;
     /**
      * Поле, хранящее трёхбуквенное обозначение валюты(EUR, USD и т.д.)
      */
     @Column(name = "currency_code")
+    @JsonProperty
     private String code;
 
     /**
@@ -37,6 +43,11 @@ public class Currency {
     public Currency() {
     }
 
+    public Currency(String name, String code) {
+        this.name = name;
+        this.code = code;
+    }
+
     /**
      * Метод добавляет страну в список стран, в которых используется эта валюта
      */
@@ -51,6 +62,15 @@ public class Currency {
         countries.remove(country);
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    @JsonIgnore
     public Object[] getObjects() {
         return new Object[] {
                 id,

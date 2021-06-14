@@ -1,5 +1,8 @@
 package com.eugeneze.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +16,11 @@ import java.util.List;
 public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty
     private int id;
 
     @Column(name = "name")
+    @JsonProperty
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -23,9 +28,11 @@ public class City {
     private Country country;
 
     @Column(name = "area")
+    @JsonProperty
     private int area;
 
     @Column(name = "population")
+    @JsonProperty
     private int population;
     /**
      * Переменная, хранящая список достопримечательностей, находящихся в городе
@@ -43,7 +50,6 @@ public class City {
     }
 
     private City(Builder builder) {
-        this.id = builder.id;
         this.name = builder.name;
         this.country = builder.country;
         this.area = builder.area;
@@ -108,6 +114,7 @@ public class City {
         return population;
     }
 
+    @JsonIgnore
     public Object[] getObjects() {
         return new Object[] {
                 id,
@@ -126,8 +133,7 @@ public class City {
         private int area;
         private int population;
 
-        public Builder(int id, String name) {
-            this.id = id;
+        public Builder(String name) {
             this.name = name;
         }
 
@@ -151,6 +157,18 @@ public class City {
         }
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setArea(int area) {
+        this.area = area;
+    }
+
+    public void setPopulation(int population) {
+        this.population = population;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -163,6 +181,8 @@ public class City {
         if (!name.equals(city.name)) return false;
         return country != null ? country.equals(city.country) : city.country == null;
     }
+
+
 
     @Override
     public int hashCode() {
@@ -182,4 +202,6 @@ public class City {
                 ", population=" + population +
                 '}';
     }
+
+
 }

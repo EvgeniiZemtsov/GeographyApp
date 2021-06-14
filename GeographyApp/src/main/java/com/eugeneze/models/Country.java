@@ -1,10 +1,11 @@
 package com.eugeneze.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,20 +19,24 @@ import java.util.Set;
 public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty
     private int id;
-
     @Column(name = "name")
+    @JsonProperty
     private String name;
     @Column(name = "population")
+    @JsonProperty
     private int population;
     @Column(name = "area")
+    @JsonProperty
     private int area;
 
     /**
      * Поле, хранящее информацию о государственной валюте
      */
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "currency_id")
+    @JsonProperty
     private Currency currency;
 
     /**
@@ -39,23 +44,27 @@ public class Country {
      */
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "head_of_state_id")
+    @JsonProperty
     private HeadOfState headOfState;
 
     /**
      * Поле, хранящее информацию о государственном языке
      */
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "language_id")
+    @JsonProperty
     private Language language;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "continent_id")
+    @JsonProperty
     private Continent continent;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "country_capital",
         joinColumns = @JoinColumn(name = "country_id"),
             inverseJoinColumns = @JoinColumn(name = "city_id"))
+    @JsonProperty
     private City capital;
 
     /**
@@ -70,6 +79,7 @@ public class Country {
      */
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "country", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonIgnore
     private Set<City> cities = new HashSet<>();
 
     /**
@@ -80,6 +90,7 @@ public class Country {
         joinColumns = @JoinColumn(name = "country_id"),
         inverseJoinColumns = @JoinColumn(name = "mountain_id"))
     @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonIgnore
     private Set<Mountain> mountains = new HashSet<>();
 
     /**
@@ -90,6 +101,7 @@ public class Country {
             joinColumns = @JoinColumn(name = "country_id"),
             inverseJoinColumns = @JoinColumn(name = "sea_id"))
     @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonIgnore
     private Set<Sea> seas = new HashSet<>();
 
     /**
@@ -100,10 +112,10 @@ public class Country {
             joinColumns = @JoinColumn(name = "country_id"),
             inverseJoinColumns = @JoinColumn(name = "ocean_id"))
     @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonIgnore
     private Set<Ocean> oceans = new HashSet<>();
 
     private Country(Builder builder) {
-        this.id = builder.id;
         this.name = builder.name;
         this.population = builder.population;
         this.area = builder.area;
@@ -178,6 +190,7 @@ public class Country {
     public void setVoting(Voting voting) {
         this.voting = voting;
     }
+    @JsonIgnore
     public List<HeadOfState> getListOfExLeaders() {
         return null;
     }
@@ -222,14 +235,17 @@ public class Country {
         }
     }
 
+    @JsonIgnore
     int getPopulation() {
         return population;
     }
 
+    @JsonIgnore
     int getArea() {
         return area;
     }
 
+    @JsonIgnore
     public Object[] getObjects() {
         return new Object[] {
                 id,
@@ -260,8 +276,8 @@ public class Country {
         private City capital;
         private Voting voting;
 
-        public Builder(int id, String name) {
-            this.id = id;
+        public Builder(String name) {
+
             this.name = name;
         }
 
@@ -308,6 +324,18 @@ public class Country {
         public Country build() {
             return new Country(this);
         }
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPopulation(int population) {
+        this.population = population;
+    }
+
+    public void setArea(int area) {
+        this.area = area;
     }
 
     @Override

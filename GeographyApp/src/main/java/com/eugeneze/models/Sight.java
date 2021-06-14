@@ -1,5 +1,8 @@
 package com.eugeneze.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 /**
@@ -11,8 +14,10 @@ import javax.persistence.*;
 public class Sight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty
     private int id;
     @Column(name = "name")
+    @JsonProperty
     private String name;
     /**
      * Город, в котором находится достопричечательность
@@ -27,12 +32,10 @@ public class Sight {
     }
 
     private Sight(Builder builder) {
-        this.id = builder.id;
         this.name = builder.name;
     }
 
     public Sight() {
-
     }
 
     /**
@@ -43,6 +46,11 @@ public class Sight {
         city.addSight(this);
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @JsonIgnore
     public Object[] getObjects() {
         return new Object[] {
                 id,
@@ -56,7 +64,7 @@ public class Sight {
         private String name;
         private City city;
 
-        public Builder(int id, String name) {
+        public Builder(String name) {
             this.id = id;
             this.name = name;
         }
