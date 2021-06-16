@@ -3,10 +3,9 @@ package com.eugeneze.springcontrollers;
 import com.eugeneze.models.Sea;
 import com.eugeneze.service.SeaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,10 +37,7 @@ public class SeaController {
     public ResponseEntity addNewSea(@RequestBody Sea sea) {
         Sea savedSea = service.addNewSea(sea);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("location", "localhost:8080/geoapp/api/seas/" + savedSea.getObjects()[0]);
-
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+        return ResponseEntity.created(UriComponentsBuilder.fromPath("/geoapp/api/seas/{id}").buildAndExpand(savedSea.getObjects()[0]).toUri()).build();
     }
 
     @PutMapping(path = "/{seaId}")

@@ -1,13 +1,11 @@
 package com.eugeneze.springcontrollers;
 
-import com.eugeneze.models.Mountain;
 import com.eugeneze.models.Ocean;
 import com.eugeneze.service.OceanService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,10 +37,7 @@ public class OceanController {
     public ResponseEntity addNewOcean(@RequestBody Ocean ocean) {
         Ocean savedOcean = service.addNewOcean(ocean);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("location", "localhost:8080/geoapp/api/oceans/" + savedOcean.getObjects()[0]);
-
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+        return ResponseEntity.created(UriComponentsBuilder.fromPath("/geoapp/api/oceans/{id}").buildAndExpand(savedOcean.getObjects()[0]).toUri()).build();
     }
 
     @PutMapping(path = "/{oceanId}")

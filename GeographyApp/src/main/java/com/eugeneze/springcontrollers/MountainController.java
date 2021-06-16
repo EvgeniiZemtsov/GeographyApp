@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,10 +39,7 @@ public class MountainController {
     public ResponseEntity addNewMountain(@RequestBody Mountain mountain) {
         Mountain savedMountain = service.addNewMountain(mountain);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("location", "localhost:8080/geoapp/api/mountains/" + savedMountain.getObjects()[0]);
-
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+        return ResponseEntity.created(UriComponentsBuilder.fromPath("/geoapp/api/mountains/{id}").buildAndExpand(savedMountain.getObjects()[0]).toUri()).build();
     }
 
     @PutMapping(path = "/{mountainId}")

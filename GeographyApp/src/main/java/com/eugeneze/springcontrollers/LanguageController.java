@@ -3,10 +3,9 @@ package com.eugeneze.springcontrollers;
 import com.eugeneze.models.Language;
 import com.eugeneze.service.LanguageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,10 +37,7 @@ public class LanguageController {
     public ResponseEntity addNewLanguage(@RequestBody Language language) {
         Language savedLanguage = service.addNewLanguage(language);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("location", "localhost:8080/geoapp/api/languages/" + savedLanguage.getObjects()[0]);
-
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+        return ResponseEntity.created(UriComponentsBuilder.fromPath("/geoapp/api/languages/{id}").buildAndExpand(savedLanguage.getObjects()[0]).toUri()).build();
     }
 
     @PutMapping(path = "/{languageId}")
