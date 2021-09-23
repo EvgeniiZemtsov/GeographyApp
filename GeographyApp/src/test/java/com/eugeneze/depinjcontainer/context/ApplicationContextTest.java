@@ -1,6 +1,7 @@
 package com.eugeneze.depinjcontainer.context;
 
-import com.eugeneze.depinjcontainer.factory.BeanFactory;
+import com.eugeneze.study.depinjcontainer.context.ApplicationContext;
+import com.eugeneze.study.depinjcontainer.factory.BeanFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.lang.reflect.InvocationTargetException;

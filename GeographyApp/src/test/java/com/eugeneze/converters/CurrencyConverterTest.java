@@ -1,6 +1,7 @@
 package com.eugeneze.converters;
 
 import com.eugeneze.models.Currency;
+import com.eugeneze.study.converters.CurrencyConverter;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

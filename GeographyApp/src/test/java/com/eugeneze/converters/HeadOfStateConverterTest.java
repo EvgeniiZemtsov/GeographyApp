@@ -2,13 +2,13 @@ package com.eugeneze.converters;
 
 import com.eugeneze.models.Country;
 import com.eugeneze.models.HeadOfState;
+import com.eugeneze.study.converters.HeadOfStateConverter;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class HeadOfStateConverterTest {
 

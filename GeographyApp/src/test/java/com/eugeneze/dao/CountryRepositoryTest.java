@@ -1,7 +1,8 @@
 package com.eugeneze.dao;
 
 import com.eugeneze.models.*;
-import org.junit.jupiter.api.AfterAll;
+import com.eugeneze.study.dao.CountryRepository;
+import com.eugeneze.study.dao.DBPool;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

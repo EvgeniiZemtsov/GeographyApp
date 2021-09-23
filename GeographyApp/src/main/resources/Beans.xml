@@ -6,23 +6,23 @@
 
     <!-- bean definitions here -->
     <bean id="dbPool"
-          class="com.eugeneze.dao.DBPool">
+          class="com.eugeneze.study.dao.DBPool">
         <property name="user" value="user"/>
         <property name="url" value="someUrl"/>
         <property name="password" value="password"/>
     </bean>
 
     <bean id="countryRepository"
-            class="com.eugeneze.dao.CountryRepository">
+            class="com.eugeneze.study.dao.CountryRepository">
         <property name="connectionPool" ref="dbPool"/>
     </bean>
 
     <bean id="countryConverter"
-          class="com.eugeneze.converters.CountryConverter">
+          class="com.eugeneze.study.converters.CountryConverter">
     </bean>
 
     <bean id="controllerCountry"
-          class="com.eugeneze.server.ControllerCountry">
+          class="com.eugeneze.study.server.ControllerCountry">
         <property name="repository" ref="countryRepository"/>
         <property name="converter" ref="countryConverter"/>
     </bean>

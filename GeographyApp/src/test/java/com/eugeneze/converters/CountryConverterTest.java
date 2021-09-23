@@ -1,6 +1,6 @@
 package com.eugeneze.converters;
 
-import com.eugeneze.converters.CountryConverter;
+import com.eugeneze.study.converters.CountryConverter;
 import com.eugeneze.models.*;
 import org.junit.jupiter.api.Test;
 

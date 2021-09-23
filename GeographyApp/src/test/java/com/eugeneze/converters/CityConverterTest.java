@@ -2,6 +2,7 @@ package com.eugeneze.converters;
 
 import com.eugeneze.models.City;
 import com.eugeneze.models.Country;
+import com.eugeneze.study.converters.CityConverter;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

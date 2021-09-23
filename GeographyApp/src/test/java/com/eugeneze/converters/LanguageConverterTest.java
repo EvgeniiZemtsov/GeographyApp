@@ -1,10 +1,10 @@
 package com.eugeneze.converters;
 
 import com.eugeneze.models.Language;
+import com.eugeneze.study.converters.LanguageConverter;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class LanguageConverterTest {
 
